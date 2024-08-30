@@ -1,9 +1,24 @@
-import { Hono } from 'hono'
+import { Hono } from 'hono';
+import { connectDB } from './db';
+import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
+import { users } from './schema';
 
-const app = new Hono()
+const app = new Hono();
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+async function main() {
+  const db = connectDB();
+  await migrate(db, { migrationsFolder: './drizzle' });
 
-export default app
+  app.get('/', (c) => {
+    return c.text('Hello Hono!');
+  });
+
+  app.get('/db/test', async (c) => {
+    const result = await db.select().from(users).all();
+    console.log(result);
+    return c.json({ result });
+  });
+}
+
+main();
+export default app;
