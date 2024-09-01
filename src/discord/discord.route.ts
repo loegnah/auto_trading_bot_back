@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { discordVerify } from './discord.middle';
 import { InteractionResponseType } from 'discord-interactions';
+import { discordVerify } from '@/discord/discord.middle';
 
 export const discordRoute = new Hono();
 

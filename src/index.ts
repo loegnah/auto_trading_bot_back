@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import { connectDB } from './db';
+import { discordRoute } from '@/discord/discord.route';
 // import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
 // import { users } from './schema';
-import { discordRoute } from './discord/discord.route';
 
 function runApp() {
   const app = new Hono();
