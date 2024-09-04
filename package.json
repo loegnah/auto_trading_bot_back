@@ -2,7 +2,7 @@
   "name": "auto_trading_bot_back",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "db:generate": "drizzle-kit generate",
+    "db:gen": "drizzle-kit generate",
     "db:up": "drizzle-kit up",
     "format": "prettier --write \"{src,test}/**/*.{js,jsx,ts,tsx,md,json,css,html}\""
   },
