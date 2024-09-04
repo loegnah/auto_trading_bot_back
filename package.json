@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "db:generate": "drizzle-kit generate",
-    "db:up": "drizzle-kit up"
+    "db:up": "drizzle-kit up",
+    "format": "prettier --write \"{src,test}/**/*.{js,jsx,ts,tsx,md,json,css,html}\""
   },
   "dependencies": {
     "discord-interactions": "^4.1.0",
@@ -12,7 +13,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@types/bun": "latest",
-    "drizzle-kit": "^0.24.2"
+    "drizzle-kit": "^0.24.2",
+    "prettier": "^3.3.3"
   }
 }
