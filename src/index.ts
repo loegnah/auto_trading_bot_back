@@ -1,6 +1,10 @@
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { Hono } from "hono";
 import { coinRoute } from "@/coin/coinRoute";
 import { discordRoute } from "@/discord/discord.route";
+
+dayjs.extend(utc);
 
 function runApp() {
   const app = new Hono();
