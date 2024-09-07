@@ -1,9 +1,12 @@
 # deps
 node_modules/
 
+# IDE
 /.vscode
 /.idea
 
-/db
+# db
+/.drizzle
 
+# env
 .env

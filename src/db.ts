@@ -1,9 +1,13 @@
-import { Database } from "bun:sqlite";
-import { drizzle } from "drizzle-orm/bun-sqlite";
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
+import { env } from "@/lib/env";
 
-export function connectDB() {
-  const sqlite = new Database("db/sqlite.db");
-  const db = drizzle(sqlite);
-
-  return db;
+function connectDB() {
+  const turso = createClient({
+    url: env.TURSO_URL,
+    authToken: env.TURSO_AUTH_TOKEN,
+  });
+  return drizzle(turso);
 }
+
+export const db = connectDB();
