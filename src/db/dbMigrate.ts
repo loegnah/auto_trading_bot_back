@@ -1,4 +1,4 @@
-import { migrate } from "drizzle-orm/bun-sqlite/migrator";
+import { migrate } from "drizzle-orm/libsql/migrator";
 import { db } from "@/db/db";
 import { env } from "@/lib/env";
 

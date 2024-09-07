@@ -7,6 +7,8 @@ export const env = z
     DB_DIR: z.string(),
     DB_FILE: z.string(),
     DB_MIGRATION_DIR: z.string(),
+    TURSO_URL: z.string(),
+    TURSO_AUTH_TOKEN: z.string(),
 
     DISCORD_APP_ID: z.string(),
     DISCORD_TOKEN: z.string(),
