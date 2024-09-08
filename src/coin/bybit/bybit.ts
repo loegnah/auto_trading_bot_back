@@ -1,7 +1,9 @@
 import { RestClientV5 } from "bybit-api";
+import { env } from "@/lib/env";
 
-const bybit = new RestClientV5({
-  testnet: true,
+export const bybit = new RestClientV5({
+  key: env.BYBIT_API_KEY,
+  secret: env.BYBIT_API_SECRET,
 });
 
 export async function getKline() {
