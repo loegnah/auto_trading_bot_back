@@ -12,7 +12,7 @@ dayjs.extend(timezone);
 async function runApp() {
   const app = new Hono();
 
-  await connectBybitWs();
+  // await connectBybitWs();
 
   app.route("/discord", discordRoute);
   app.route("/coin", coinRoute);
