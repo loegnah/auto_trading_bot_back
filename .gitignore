@@ -5,8 +5,5 @@ node_modules/
 /.vscode
 /.idea
 
-# db
-/.drizzle
-
 # env
 .env

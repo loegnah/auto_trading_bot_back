@@ -3,7 +3,7 @@ import { env } from "./src/lib/env";
 
 export default defineConfig({
   schema: ["./src/schema/*.ts"],
-  out: `./.drizzle/migration`,
+  out: env.DB_MIGRATION_DIR,
   dialect: "sqlite",
   driver: "turso",
   dbCredentials: {

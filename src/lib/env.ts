@@ -4,8 +4,6 @@ import { z } from "zod";
 
 export const env = z
   .object({
-    DB_DIR: z.string(),
-    DB_FILE: z.string(),
     DB_MIGRATION_DIR: z.string(),
     TURSO_URL: z.string(),
     TURSO_AUTH_TOKEN: z.string(),
