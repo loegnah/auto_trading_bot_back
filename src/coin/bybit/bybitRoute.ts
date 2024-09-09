@@ -1,6 +1,9 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { getKlines } from "@/coin/bybit/bybit";
+import { z } from "zod";
+import { buyMarketOrder, getKlines } from "@/coin/bybit/bybit";
 import { calculateRSIs } from "@/lib/rsi";
+import { zNumericString } from "@/lib/validators";
 
 export const bybitRoute = new Hono();
 
@@ -27,3 +30,19 @@ bybitRoute.get("/rsi/get", async (c) => {
   const rsiList = calculateRSIs(ohlcAvgPrices);
   return c.json({ rsi: Number(rsiList[rsiList.length - 1].toFixed(2)) });
 });
+
+bybitRoute.post(
+  "/order/buy",
+  zValidator(
+    "form",
+    z.object({
+      symbol: z.string(),
+      qty: zNumericString(),
+    }),
+  ),
+  async (c) => {
+    const { symbol, qty } = c.req.valid("form");
+    const order = await buyMarketOrder({ symbol, qty });
+    return c.json(order);
+  },
+);

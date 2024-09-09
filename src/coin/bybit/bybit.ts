@@ -41,3 +41,19 @@ export async function getKlines({
 export async function getBybitServerTime() {
   return bybit.getServerTime();
 }
+
+export async function buyMarketOrder({
+  symbol,
+  qty,
+}: {
+  symbol: string;
+  qty: string;
+}) {
+  return bybit.submitOrder({
+    category: "linear",
+    side: "Buy",
+    orderType: "Market",
+    symbol,
+    qty,
+  });
+}
