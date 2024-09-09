@@ -57,3 +57,10 @@ export async function buyMarketOrder({
     qty,
   });
 }
+
+export async function getPositions() {
+  return bybit.getPositionInfo({
+    category: "linear",
+    settleCoin: "USDT",
+  });
+}

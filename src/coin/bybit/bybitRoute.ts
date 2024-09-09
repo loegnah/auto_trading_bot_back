@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
-import { buyMarketOrder, getKlines } from "@/coin/bybit/bybit";
+import { buyMarketOrder, getKlines, getPositions } from "@/coin/bybit/bybit";
 import { calculateRSIs } from "@/lib/rsi";
 import { zNumericString } from "@/lib/validators";
 
@@ -46,3 +46,9 @@ bybitRoute.post(
     return c.json(order);
   },
 );
+
+bybitRoute.get("/position/get/all", async (c) => {
+  const orders = await getPositions();
+  console.log(orders);
+  return c.json(orders);
+});
