@@ -8,6 +8,7 @@
     "format": "prettier --write \"{src,test}/**/*.{js,jsx,ts,tsx,md,json,css,html}\""
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.2.2",
     "@libsql/client": "^0.10.0",
     "bybit-api": "^3.10.16",
     "dayjs": "^1.11.13",
