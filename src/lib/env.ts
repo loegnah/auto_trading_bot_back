@@ -1,6 +1,5 @@
 import { z } from "zod";
-
-// const booleanParser = z.coerce.string().transform((val) => val === 'true');
+import { zBoolean } from "@/lib/validators";
 
 export const env = z
   .object({
@@ -14,5 +13,6 @@ export const env = z
 
     BYBIT_API_KEY: z.string(),
     BYBIT_API_SECRET: z.string(),
+    BYBIT_TESTNET: zBoolean(),
   })
   .parse(process.env);

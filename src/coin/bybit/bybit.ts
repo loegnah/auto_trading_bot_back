@@ -4,6 +4,7 @@ import { env } from "@/lib/env";
 export const bybit = new RestClientV5({
   key: env.BYBIT_API_KEY,
   secret: env.BYBIT_API_SECRET,
+  testnet: !!env.BYBIT_TESTNET,
 });
 
 export async function getKlines({
