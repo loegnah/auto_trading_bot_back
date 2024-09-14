@@ -47,10 +47,14 @@ export async function linearOrder({
   position,
   symbol,
   qty,
+  takeProfit,
+  stopLoss,
 }: {
   position: "long" | "short";
   symbol: string;
   qty: number;
+  takeProfit?: number; // not percent, just base coin value
+  stopLoss?: number; // not percent, just base coin value
 }) {
   return bybit.submitOrder({
     category: "linear",
@@ -58,6 +62,9 @@ export async function linearOrder({
     orderType: "Market",
     symbol,
     qty: qty.toString(),
+    tpslMode: "Full",
+    takeProfit: takeProfit?.toString(),
+    stopLoss: stopLoss?.toString(),
   });
 }
 
@@ -106,4 +113,27 @@ export async function setLeverage({
     throw new Error(ret.retMsg);
   }
   return leverage;
+}
+
+export async function setTpsl({
+  symbol,
+  takeProfit,
+  stopLoss,
+}: {
+  symbol: string;
+  takeProfit?: number;
+  stopLoss?: number;
+}) {
+  const ret = await bybit.setTradingStop({
+    category: "linear",
+    symbol,
+    tpslMode: "Full",
+    positionIdx: 0,
+    takeProfit: takeProfit?.toString(),
+    stopLoss: stopLoss?.toString(),
+  });
+  if (ret.retMsg !== "OK") {
+    throw new Error(ret.retMsg);
+  }
+  return ret;
 }

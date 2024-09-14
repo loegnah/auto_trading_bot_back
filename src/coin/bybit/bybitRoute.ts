@@ -7,6 +7,7 @@ import {
   getPositions,
   linearOrder,
   setLeverage,
+  setTpsl,
 } from "@/coin/bybit/bybit";
 import { calculateRSIs } from "@/lib/rsi";
 
@@ -56,6 +57,9 @@ bybitRoute.post(
 
 bybitRoute.get("/position/get/all", async (c) => {
   const orders = await getPositions({ settleCoin: "USDT" });
+  orders.result.list.forEach(({ takeProfit, stopLoss }) => {
+    console.log(takeProfit, stopLoss);
+  });
   return c.json(orders);
 });
 
@@ -87,5 +91,23 @@ bybitRoute.post(
     } catch (e: any) {
       return c.json({ leverage: preLeverage, error: e.message });
     }
+  },
+);
+
+bybitRoute.post(
+  "/position/tp-sl/set",
+  zValidator(
+    "json",
+    z.object({
+      symbol: z.string(),
+      takeProfit: z.coerce.number().positive(),
+      stopLoss: z.coerce.number().positive(),
+    }),
+  ),
+  async (c) => {
+    const { symbol, takeProfit, stopLoss } = c.req.valid("json");
+    const ret = await setTpsl({ symbol, takeProfit, stopLoss });
+    console.log(ret);
+    return c.json(ret);
   },
 );
