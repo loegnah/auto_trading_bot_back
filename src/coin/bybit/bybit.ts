@@ -61,9 +61,49 @@ export async function linearOrder({
   });
 }
 
-export async function getPositions() {
+export async function getPositions({
+  symbol,
+  settleCoin,
+}: {
+  symbol?: string;
+  settleCoin?: string;
+}) {
+  if (!symbol && !settleCoin) {
+    throw new Error("symbol or settleCoin is required");
+  }
   return bybit.getPositionInfo({
     category: "linear",
-    settleCoin: "USDT",
+    settleCoin,
+    symbol,
   });
+}
+
+export async function getLeverage({ symbol }: { symbol: string }) {
+  const positionInfo = await bybit.getPositionInfo({
+    category: "linear",
+    symbol,
+  });
+
+  return positionInfo.result.list.length
+    ? positionInfo.result.list[0].leverage
+    : null;
+}
+
+export async function setLeverage({
+  symbol,
+  leverage,
+}: {
+  symbol: string;
+  leverage: number;
+}) {
+  const ret = await bybit.setLeverage({
+    category: "linear",
+    symbol,
+    buyLeverage: leverage.toString(),
+    sellLeverage: leverage.toString(),
+  });
+  if (ret.retMsg !== "OK") {
+    throw new Error(ret.retMsg);
+  }
+  return leverage;
 }

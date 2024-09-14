@@ -1,7 +1,13 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
-import { getKlines, getPositions, linearOrder } from "@/coin/bybit/bybit";
+import {
+  getKlines,
+  getLeverage,
+  getPositions,
+  linearOrder,
+  setLeverage,
+} from "@/coin/bybit/bybit";
 import { calculateRSIs } from "@/lib/rsi";
 
 export const bybitRoute = new Hono();
@@ -49,6 +55,37 @@ bybitRoute.post(
 );
 
 bybitRoute.get("/position/get/all", async (c) => {
-  const orders = await getPositions();
+  const orders = await getPositions({ settleCoin: "USDT" });
   return c.json(orders);
 });
+
+bybitRoute.get(
+  "/leverage/get",
+  zValidator("query", z.object({ symbol: z.string() })),
+  async (c) => {
+    const { symbol } = c.req.valid("query");
+    const leverage = await getLeverage({ symbol });
+    return c.json({ leverage });
+  },
+);
+
+bybitRoute.post(
+  "/leverage/set",
+  zValidator(
+    "json",
+    z.object({
+      symbol: z.string(),
+      leverage: z.coerce.number().max(200).min(1),
+    }),
+  ),
+  async (c) => {
+    const { symbol, leverage } = c.req.valid("json");
+    const preLeverage = await getLeverage({ symbol });
+    try {
+      const newLeverage = await setLeverage({ symbol, leverage });
+      return c.json({ preLeverage, newLeverage });
+    } catch (e: any) {
+      return c.json({ leverage: preLeverage, error: e.message });
+    }
+  },
+);
