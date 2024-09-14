@@ -43,19 +43,21 @@ export async function getBybitServerTime() {
   return bybit.getServerTime();
 }
 
-export async function buyMarketOrder({
+export async function linearOrder({
+  position,
   symbol,
   qty,
 }: {
+  position: "long" | "short";
   symbol: string;
-  qty: string;
+  qty: number;
 }) {
   return bybit.submitOrder({
     category: "linear",
-    side: "Buy",
+    side: position === "long" ? "Buy" : "Sell",
     orderType: "Market",
     symbol,
-    qty,
+    qty: qty.toString(),
   });
 }
 

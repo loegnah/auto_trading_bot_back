@@ -1,9 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
-import { buyMarketOrder, getKlines, getPositions } from "@/coin/bybit/bybit";
+import { getKlines, getPositions, linearOrder } from "@/coin/bybit/bybit";
 import { calculateRSIs } from "@/lib/rsi";
-import { zNumericString } from "@/lib/validators";
 
 export const bybitRoute = new Hono();
 
@@ -34,21 +33,22 @@ bybitRoute.get("/rsi/get", async (c) => {
 bybitRoute.post(
   "/order/buy",
   zValidator(
-    "form",
+    "json",
     z.object({
+      position: z.enum(["long", "short"]),
       symbol: z.string(),
-      qty: zNumericString(),
+      qty: z.coerce.number().positive(),
     }),
   ),
   async (c) => {
-    const { symbol, qty } = c.req.valid("form");
-    const order = await buyMarketOrder({ symbol, qty });
+    const { position, symbol, qty } = c.req.valid("json");
+    const order = await linearOrder({ position, symbol, qty });
+    console.debug(`Order: [${position}], symbol: ${symbol}, qty: ${qty}`);
     return c.json(order);
   },
 );
 
 bybitRoute.get("/position/get/all", async (c) => {
   const orders = await getPositions();
-  console.log(orders);
   return c.json(orders);
 });
