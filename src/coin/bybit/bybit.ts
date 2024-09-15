@@ -44,13 +44,13 @@ export async function getBybitServerTime() {
 }
 
 export async function linearOrder({
-  position,
+  positionSide,
   symbol,
   qty,
   takeProfit,
   stopLoss,
 }: {
-  position: "long" | "short";
+  positionSide: "long" | "short";
   symbol: string;
   qty: number;
   takeProfit?: number; // not percent, just base coin value
@@ -58,7 +58,7 @@ export async function linearOrder({
 }) {
   return bybit.submitOrder({
     category: "linear",
-    side: position === "long" ? "Buy" : "Sell",
+    side: positionSide === "long" ? "Buy" : "Sell",
     orderType: "Market",
     symbol,
     qty: qty.toString(),
@@ -136,4 +136,21 @@ export async function setTpsl({
     throw new Error(ret.retMsg);
   }
   return ret;
+}
+
+export async function closePosition({
+  symbol,
+  positionSide,
+}: {
+  symbol: string;
+  positionSide: "long" | "short";
+}) {
+  return bybit.submitOrder({
+    category: "linear",
+    side: positionSide === "long" ? "Sell" : "Buy",
+    orderType: "Market",
+    symbol,
+    qty: "0",
+    reduceOnly: true,
+  });
 }
