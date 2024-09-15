@@ -1,5 +1,8 @@
 # deps
-node_modules/
+/node_modules
+
+# build
+/build
 
 # IDE
 /.vscode
@@ -7,3 +10,11 @@ node_modules/
 
 # env
 .env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# misc
+.DS_Store
+*.pem
