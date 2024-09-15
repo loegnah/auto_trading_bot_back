@@ -1,5 +1,7 @@
-import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 
-export const formValidator = (schema: Record<string, any>) =>
-  zValidator("form", z.object(schema));
+export const zNumericString = () =>
+  z.string().refine((val) => !isNaN(Number(val)));
+
+export const zBoolean = () =>
+  z.coerce.string().transform((val) => val === "true");

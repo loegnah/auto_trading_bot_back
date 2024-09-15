@@ -4,6 +4,7 @@ import { env } from "@/lib/env";
 export const bybit = new RestClientV5({
   key: env.BYBIT_API_KEY,
   secret: env.BYBIT_API_SECRET,
+  testnet: !!env.BYBIT_TESTNET,
 });
 
 export async function getKlines({
@@ -40,4 +41,116 @@ export async function getKlines({
 
 export async function getBybitServerTime() {
   return bybit.getServerTime();
+}
+
+export async function linearOrder({
+  positionSide,
+  symbol,
+  qty,
+  takeProfit,
+  stopLoss,
+}: {
+  positionSide: "long" | "short";
+  symbol: string;
+  qty: number;
+  takeProfit?: number; // not percent, just base coin value
+  stopLoss?: number; // not percent, just base coin value
+}) {
+  return bybit.submitOrder({
+    category: "linear",
+    side: positionSide === "long" ? "Buy" : "Sell",
+    orderType: "Market",
+    symbol,
+    qty: qty.toString(),
+    tpslMode: "Full",
+    takeProfit: takeProfit?.toString(),
+    stopLoss: stopLoss?.toString(),
+  });
+}
+
+export async function getPositions({
+  symbol,
+  settleCoin,
+}: {
+  symbol?: string;
+  settleCoin?: string;
+}) {
+  if (!symbol && !settleCoin) {
+    throw new Error("symbol or settleCoin is required");
+  }
+  return bybit.getPositionInfo({
+    category: "linear",
+    settleCoin,
+    symbol,
+  });
+}
+
+export async function getLeverage({ symbol }: { symbol: string }) {
+  const positionInfo = await bybit.getPositionInfo({
+    category: "linear",
+    symbol,
+  });
+
+  return positionInfo.result.list.length
+    ? positionInfo.result.list[0].leverage
+    : null;
+}
+
+export async function setLeverage({
+  symbol,
+  leverage,
+}: {
+  symbol: string;
+  leverage: number;
+}) {
+  const ret = await bybit.setLeverage({
+    category: "linear",
+    symbol,
+    buyLeverage: leverage.toString(),
+    sellLeverage: leverage.toString(),
+  });
+  if (ret.retMsg !== "OK") {
+    throw new Error(ret.retMsg);
+  }
+  return leverage;
+}
+
+export async function setTpsl({
+  symbol,
+  takeProfit,
+  stopLoss,
+}: {
+  symbol: string;
+  takeProfit?: number;
+  stopLoss?: number;
+}) {
+  const ret = await bybit.setTradingStop({
+    category: "linear",
+    symbol,
+    tpslMode: "Full",
+    positionIdx: 0,
+    takeProfit: takeProfit?.toString(),
+    stopLoss: stopLoss?.toString(),
+  });
+  if (ret.retMsg !== "OK") {
+    throw new Error(ret.retMsg);
+  }
+  return ret;
+}
+
+export async function closePosition({
+  symbol,
+  positionSide,
+}: {
+  symbol: string;
+  positionSide: "long" | "short";
+}) {
+  return bybit.submitOrder({
+    category: "linear",
+    side: positionSide === "long" ? "Sell" : "Buy",
+    orderType: "Market",
+    symbol,
+    qty: "0",
+    reduceOnly: true,
+  });
 }
