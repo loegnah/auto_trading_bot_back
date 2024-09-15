@@ -1,25 +1,22 @@
 import { logger } from "@chneau/elysia-logger";
+import swagger from "@elysiajs/swagger";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Elysia from "elysia";
+import { coinPlugin } from "@/coin/coin.plugin";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-// async function runApp() {
-//   const app = new Hono();
-
-//   app.use(logger());
-
-//   // await connectBybitWs();
-
-//   app.route("/discord", discordRoute);
-//   app.route("/coin", coinRoute);
-
-//   return app;
-// }
-
-// export default await runApp();
-
-new Elysia().use(logger()).listen(3000);
+new Elysia()
+  .use(logger())
+  .use(
+    swagger({
+      documentation: {
+        openapi: "3.1.0",
+      },
+    }),
+  )
+  .use(coinPlugin)
+  .listen(3000);
