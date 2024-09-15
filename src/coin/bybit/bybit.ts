@@ -1,4 +1,5 @@
 import { KlineIntervalV3, RestClientV5 } from "bybit-api";
+import dayjs from "dayjs";
 import { env } from "@/lib/env";
 
 export const bybit = new RestClientV5({
@@ -8,15 +9,15 @@ export const bybit = new RestClientV5({
 });
 
 export async function getKlines({
-  symbol = "BTCUSDT",
-  interval = "3",
-  endTimeStamp = Date.now(),
-  count = 1,
+  symbol,
+  interval,
+  count,
+  endTimeStamp = dayjs().unix(),
 }: {
-  symbol?: string;
-  interval?: KlineIntervalV3;
+  symbol: string;
+  interval: KlineIntervalV3;
+  count: number;
   endTimeStamp?: number;
-  count?: number;
 }) {
   const klines = await bybit.getKline({
     category: "linear",

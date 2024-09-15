@@ -22,6 +22,10 @@
     "noUnusedParameters": true,
     "noPropertyAccessFromIndexSignature": true,
 
+    "types": [
+      "bun-types"
+    ] /* Specify type package names to be included without being referenced in a source file. */,
+
     // paths
     "paths": {
       "@/*": ["./src/*"],
