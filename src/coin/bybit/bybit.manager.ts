@@ -1,11 +1,12 @@
 import { BybitWsClient } from "@/coin/bybit/bybit-ws.client";
 import { BybitClient } from "@/coin/bybit/bybit.client";
 import { printKlineData } from "@/coin/bybit/bybit.lib";
-import { getMockClientAuths, getMockTopics } from "@/coin/bybit/bybit.mock";
+import { getMockTopics } from "@/coin/bybit/bybit.mock";
 import { KlineRaw } from "@/coin/bybit/bybit.type";
+import { db } from "@/db";
 
 export class BybitManager {
-  private wsClient = new BybitWsClient();
+  private wsClient: BybitWsClient;
   private clients: BybitClient[] = [];
   private lastKlineRaw: KlineRaw | null = null;
 
@@ -14,13 +15,26 @@ export class BybitManager {
   }
 
   async init() {
-    const clientAuths = await getMockClientAuths();
-    this.clients = clientAuths.map((auth) => new BybitClient(auth));
+    await this.initClients();
+    await this.initWsClient();
+  }
 
+  private async initWsClient() {
+    this.wsClient = new BybitWsClient();
     this.wsClient.registerUpdateHandler(this.handleUpdate);
+    this.wsClient.subscribeTopics(await getMockTopics());
+  }
 
-    const topics = await getMockTopics();
-    this.wsClient.subscribeTopics(topics);
+  private async initClients() {
+    const clientInfos = await db.query.bybitTable.findMany();
+    this.clients = clientInfos.map(
+      (info) =>
+        new BybitClient({
+          apiKey: info.apiKey,
+          apiSecret: info.apiSecret,
+          testnet: info.testnet === 1,
+        }),
+    );
   }
 
   private async handleUpdate(res: any) {
