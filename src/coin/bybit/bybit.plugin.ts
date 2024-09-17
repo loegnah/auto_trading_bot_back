@@ -1,26 +1,23 @@
 import { Elysia, t } from "elysia";
-// import {
-//   closePosition,
-//   getKlines,
-//   getLeverage,
-//   getPositions,
-//   linearOrder,
-//   setLeverage,
-//   setTpsl,
-// } from "@/coin/bybit/bybit";
-import { BybitWsService } from "@/coin/bybit/bybit-ws.service";
-import { bybitClient } from "@/coin/bybit/bybit.client";
+import { BybitClient } from "@/coin/bybit/bybit.client";
 import { INTERVAL_LIST } from "@/coin/bybit/bybit.const";
+import { BybitManager } from "@/coin/bybit/bybit.manager";
+import { env } from "@/lib/env";
 import { calculateRSIs } from "@/lib/rsi";
 
-export const bybitPlugin = new Elysia({ prefix: "/bybit" })
+export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
   .decorate({
-    BybitWsService: new BybitWsService(),
+    BybitClient: new BybitClient({
+      apiKey: env.BYBIT_API_KEY,
+      apiSecret: env.BYBIT_API_SECRET,
+      testnet: !!env.BYBIT_TESTNET,
+    }),
+    BybitManager: new BybitManager(),
   })
   .get(
     "/kline/get",
-    async ({ query }) => {
-      const klines = await bybitClient.getKlines({
+    async ({ query, BybitClient }) => {
+      const klines = await BybitClient.getKlines({
         symbol: query.symbol,
         interval: query.interval,
         count: query.count,
@@ -38,8 +35,8 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit" })
   )
   .get(
     "/rsi/get",
-    async ({ query }) => {
-      const klines = await bybitClient.getKlines({
+    async ({ query, BybitClient }) => {
+      const klines = await BybitClient.getKlines({
         symbol: query.symbol,
         interval: query.interval,
         count: 200,
@@ -60,8 +57,8 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit" })
   )
   .post(
     "/order/create",
-    async ({ body }) => {
-      const order = await bybitClient.createOrder({
+    async ({ body, BybitClient }) => {
+      const order = await BybitClient.createOrder({
         ...body,
       });
       return order;
@@ -80,8 +77,8 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit" })
   )
   .post(
     "/order/close",
-    async ({ body }) => {
-      const order = await bybitClient.closePosition({
+    async ({ body, BybitClient }) => {
+      const order = await BybitClient.closePosition({
         symbol: body.symbol,
         positionSide: body.positionSide,
       });
@@ -94,14 +91,14 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit" })
       }),
     },
   )
-  .get("/position/get/all", async () => {
-    const orders = await bybitClient.getPositions({ settleCoin: "USDT" });
+  .get("/position/get/all", async ({ BybitClient }) => {
+    const orders = await BybitClient.getPositions({ settleCoin: "USDT" });
     return orders;
   })
   .get(
     "/leverage/get",
-    async ({ query }) => {
-      const leverage = await bybitClient.getLeverage({ symbol: query.symbol });
+    async ({ query, BybitClient }) => {
+      const leverage = await BybitClient.getLeverage({ symbol: query.symbol });
       return { leverage };
     },
     {
@@ -112,12 +109,12 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit" })
   )
   .post(
     "/leverage/set",
-    async ({ body }) => {
-      const preLeverage = await bybitClient.getLeverage({
+    async ({ body, BybitClient }) => {
+      const preLeverage = await BybitClient.getLeverage({
         symbol: body.symbol,
       });
       try {
-        const leverage = await bybitClient.setLeverage({
+        const leverage = await BybitClient.setLeverage({
           symbol: body.symbol,
           leverage: body.leverage,
         });
@@ -138,8 +135,8 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit" })
   )
   .post(
     "/position/tp-sl/set",
-    async ({ body }) => {
-      const ret = await bybitClient.setTpsl({
+    async ({ body, BybitClient }) => {
+      const ret = await BybitClient.setTpsl({
         symbol: body.symbol,
         takeProfit: body.takeProfit,
         stopLoss: body.stopLoss,

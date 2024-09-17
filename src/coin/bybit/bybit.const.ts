@@ -15,3 +15,5 @@ export const INTERVAL_LIST: KlineIntervalV3[] = [
   "W",
   "M",
 ] as const;
+
+export const KLINE_FIELDS = ["start", "open", "high", "low", "close"] as const;

@@ -1,6 +1,6 @@
 import { KlineIntervalV3, RestClientV5 } from "bybit-api";
 import dayjs from "dayjs";
-import { env } from "@/lib/env";
+import { Kline } from "@/coin/bybit/bybit.type";
 
 export class BybitClient {
   private readonly client: RestClientV5;
@@ -27,7 +27,7 @@ export class BybitClient {
     interval: KlineIntervalV3;
     count: number;
     endTimeStamp?: number;
-  }) {
+  }): Promise<Kline[]> {
     const klines = await this.client.getKline({
       category: "linear",
       symbol,
@@ -39,7 +39,7 @@ export class BybitClient {
     });
 
     return klines.result.list.slice(1).map((data) => ({
-      startTime: Number(data[0]),
+      start: Number(data[0]),
       open: Number(data[1]),
       high: Number(data[2]),
       low: Number(data[3]),
@@ -161,9 +161,3 @@ export class BybitClient {
     return ret;
   }
 }
-
-export const bybitClient = new BybitClient({
-  apiKey: env.BYBIT_API_KEY,
-  apiSecret: env.BYBIT_API_SECRET,
-  testnet: !!env.BYBIT_TESTNET,
-});
