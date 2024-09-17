@@ -19,3 +19,6 @@ export const bybitRelations = relations(bybitTable, ({ one }) => ({
     references: [userTable.id],
   }),
 }));
+
+export type Bybit = typeof bybitTable.$inferSelect;
+export type BybitInsert = typeof bybitTable.$inferInsert;

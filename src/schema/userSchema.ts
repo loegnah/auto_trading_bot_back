@@ -11,3 +11,6 @@ export const userTable = sqliteTable("user", {
 export const userRelations = relations(userTable, ({ many }) => ({
   bybit: many(bybitTable),
 }));
+
+export type User = typeof userTable.$inferSelect;
+export type UserInsert = typeof userTable.$inferInsert;

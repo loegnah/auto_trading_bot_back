@@ -4,8 +4,9 @@ import { printKlineData } from "@/coin/bybit/bybit.lib";
 import { getMockTopics } from "@/coin/bybit/bybit.mock";
 import { KlineRaw } from "@/coin/bybit/bybit.type";
 import { db } from "@/db";
+import { BybitInsert, bybitTable } from "@/schema/bybitSchema";
 
-export class BybitManager {
+class BybitManager {
   private wsClient: BybitWsClient;
   private clients: BybitClient[] = [];
   private lastKlineRaw: KlineRaw | null = null;
@@ -15,17 +16,17 @@ export class BybitManager {
   }
 
   async init() {
-    await this.initClients();
-    await this.initWsClient();
+    await this.loadWsClient();
+    await this.loadClients();
   }
 
-  private async initWsClient() {
+  private async loadWsClient() {
     this.wsClient = new BybitWsClient();
     this.wsClient.registerUpdateHandler(this.handleUpdate);
     this.wsClient.subscribeTopics(await getMockTopics());
   }
 
-  private async initClients() {
+  private async loadClients() {
     const clientInfos = await db.query.bybitTable.findMany();
     this.clients = clientInfos.map(
       (info) =>
@@ -45,4 +46,27 @@ export class BybitManager {
     }
     this.lastKlineRaw = newKlineRaw;
   }
+
+  async registerClient(params: BybitInsert) {
+    const newClientInfos = await db
+      .insert(bybitTable)
+      .values({
+        ...params,
+      })
+      .returning();
+    if (!newClientInfos.length) {
+      throw new Error("Failed to register client");
+    }
+    const newClientInfo = newClientInfos[0];
+    console.debug(newClientInfo);
+    const newClient = new BybitClient({
+      apiKey: newClientInfo.apiKey,
+      apiSecret: newClientInfo.apiSecret,
+      testnet: newClientInfo.testnet === 1,
+    });
+    this.clients.push(newClient);
+    return newClientInfo;
+  }
 }
+
+export const bybitManager = new BybitManager();
