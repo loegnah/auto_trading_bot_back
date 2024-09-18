@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "31508ff9-6c40-4190-b379-4bec329e0275",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "532cfda6-bd15-431f-9499-9b47d0f29278",
+  "prevId": "31508ff9-6c40-4190-b379-4bec329e0275",
   "tables": {
     "bybit": {
       "name": "bybit",
@@ -27,6 +27,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "testnet": {
+          "name": "testnet",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
         },
         "user_id": {
           "name": "user_id",

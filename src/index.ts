@@ -6,6 +6,7 @@ import utc from "dayjs/plugin/utc";
 import { Elysia } from "elysia";
 import { coinPlugin } from "@/coin/coin.plugin";
 import { discordPlugin } from "@/discord/discord.plugin";
+import { userPlugin } from "@/user/user.plugin";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -19,6 +20,7 @@ new Elysia()
       },
     }),
   )
+  .use(userPlugin)
   .use(coinPlugin)
   .use(discordPlugin)
   .listen(3000);
