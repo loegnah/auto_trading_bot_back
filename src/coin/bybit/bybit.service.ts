@@ -6,8 +6,8 @@ import { KlineRaw } from "@/coin/bybit/bybit.type";
 import { db } from "@/db";
 import { BybitInsert, bybitTable } from "@/schema/bybitSchema";
 
-class BybitManager {
-  private wsClient: BybitWsClient;
+export class BybitService {
+  private wsClient = new BybitWsClient();
   private clients: BybitClient[] = [];
   private lastKlineRaw: KlineRaw | null = null;
 
@@ -21,7 +21,6 @@ class BybitManager {
   }
 
   private async loadWsClient() {
-    this.wsClient = new BybitWsClient();
     this.wsClient.registerUpdateHandler(this.handleUpdate);
     this.wsClient.subscribeTopics(await getMockTopics());
   }
@@ -68,5 +67,3 @@ class BybitManager {
     return newClientInfo;
   }
 }
-
-export const bybitManager = new BybitManager();

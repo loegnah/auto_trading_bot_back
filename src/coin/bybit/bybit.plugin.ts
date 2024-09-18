@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { BybitClient } from "@/coin/bybit/bybit.client";
 import { INTERVAL_LIST } from "@/coin/bybit/bybit.const";
-import { bybitManager } from "@/coin/bybit/bybit.manager";
+import { BybitService } from "@/coin/bybit/bybit.service";
 import { env } from "@/lib/env";
 import { calculateRSIs } from "@/lib/rsi";
 
@@ -12,12 +12,12 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
       apiSecret: env.BYBIT_API_SECRET,
       testnet: !!env.BYBIT_TESTNET,
     }),
-    BybitManager: bybitManager,
+    bybitService: new BybitService(),
   })
   .post(
     "/client/register",
-    async ({ body, BybitManager }) => {
-      const newClientInfo = await BybitManager.registerClient({
+    async ({ body, bybitService }) => {
+      const newClientInfo = await bybitService.registerClient({
         ...body,
         testnet: body.testnet ? 1 : 0,
       });

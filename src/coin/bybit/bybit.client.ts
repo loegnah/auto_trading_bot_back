@@ -15,7 +15,7 @@ export class BybitClient {
     testnet: boolean;
   }) {
     this.client = new RestClientV5({ key, secret, testnet });
-    console.debug(`[bybit-client] "${key}" created`);
+    console.debug(`[bybit-client] created (key: "${key}")`);
   }
 
   async getKlines({
