@@ -27,6 +27,9 @@ export class BybitService {
 
   private async loadClients() {
     const clientInfos = await db.query.bybitTable.findMany();
+    if (!clientInfos.length) {
+      throw new Error("No clients found");
+    }
     this.clients = clientInfos.map(
       (info) =>
         new BybitClient({

@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 import { userTable } from "@/schema/userSchema";
 
-export const bybitTable = sqliteTable("bybit", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const bybitTable = pgTable("bybit", {
+  id: serial("id").primaryKey(),
   apiKey: text("api_key").notNull(),
   apiSecret: text("api_secret").notNull(),
   testnet: integer("testnet").default(0),

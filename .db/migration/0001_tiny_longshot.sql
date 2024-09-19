@@ -1,1 +1,0 @@
-ALTER TABLE `bybit` ADD `testnet` integer DEFAULT 0;

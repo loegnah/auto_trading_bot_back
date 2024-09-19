@@ -1,15 +1,12 @@
-import { createClient } from "@libsql/client";
-import { drizzle } from "drizzle-orm/libsql";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { env } from "@/lib/env";
 import { bybitRelations, bybitTable } from "@/schema/bybitSchema";
 import { userRelations, userTable } from "@/schema/userSchema";
 
 function connectDB() {
-  const turso = createClient({
-    url: env.TURSO_URL,
-    authToken: env.TURSO_AUTH_TOKEN,
-  });
-  return drizzle(turso, {
+  const pgClient = postgres(env.DB_URL);
+  return drizzle(pgClient, {
     schema: {
       userTable,
       userRelations,
