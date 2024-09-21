@@ -9,10 +9,10 @@ export class StrategyCoinBybitRsi extends Strategy {
   name: string;
   topics: Topic[];
   private lastRsi: number | null = null;
-  private readonly sourceType: SourceType;
   private readonly symbol: string;
   private readonly interval: Interval;
-  private readonly period: number;
+  private readonly rsiPeriod: number;
+  private readonly sourceType: SourceType;
 
   constructor({
     name,
@@ -38,6 +38,7 @@ export class StrategyCoinBybitRsi extends Strategy {
     this.sourceType = sourceType;
     this.symbol = symbol;
     this.interval = interval;
+    this.rsiPeriod = period;
     this.init();
   }
 
@@ -60,7 +61,7 @@ export class StrategyCoinBybitRsi extends Strategy {
           : (kline.open + kline.high + kline.low + kline.close) / 4,
       )
       .reverse();
-    const rsiHistory = calcRsiHistory({ prices, period: this.period });
+    const rsiHistory = calcRsiHistory({ prices, period: this.rsiPeriod });
     this.lastRsi = rsiHistory[rsiHistory.length - 1];
   }
 

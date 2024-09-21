@@ -4,7 +4,7 @@ import { printKlineData } from "@/coin/bybit/bybit.lib";
 import { getMockTopics } from "@/coin/bybit/bybit.mock";
 import { KlineRaw } from "@/coin/bybit/bybit.type";
 import { db } from "@/db";
-import { BybitInsert, bybitTable } from "@/schema/bybitSchema";
+import { ClientInsert, clientTable } from "@/schema/clientSchema.ts";
 import { Strategy } from "@/strategy/strategy";
 import { StrategyCoinBybitRsi } from "@/strategy/strategy.coin-bybit-rsi";
 
@@ -21,6 +21,27 @@ export class BybitService {
   async init() {
     await this.loadWsClient();
     await this.loadClients();
+    await this.loadStrategies();
+  }
+
+  private async loadWsClient() {
+    this.wsClient.registerUpdateHandler(this.handleUpdate);
+    this.wsClient.subscribeTopics(await getMockTopics());
+  }
+
+  private async loadClients() {
+    const clientInfos = await db.query.clientTable.findMany();
+    this.clients = clientInfos.map(
+      (info) =>
+        new BybitClient({
+          apiKey: info.apiKey,
+          apiSecret: info.apiSecret,
+          testnet: info.testnet,
+        }),
+    );
+  }
+
+  private async loadStrategies() {
     this.strategies.push(
       new StrategyCoinBybitRsi({
         name: "RSI",
@@ -34,26 +55,8 @@ export class BybitService {
     );
   }
 
-  private async loadWsClient() {
-    this.wsClient.registerUpdateHandler(this.handleUpdate);
-    this.wsClient.subscribeTopics(await getMockTopics());
-  }
-
-  private async loadClients() {
-    const clientInfos = await db.query.bybitTable.findMany();
-    this.clients = clientInfos.map(
-      (info) =>
-        new BybitClient({
-          apiKey: info.apiKey,
-          apiSecret: info.apiSecret,
-          testnet: info.testnet === 1,
-        }),
-    );
-  }
-
   private async handleUpdate(res: any) {
     const newKlineRaw = res.data[0];
-    // console.log(newKlineRaw);
     if (this.lastKlineRaw && this.lastKlineRaw.start !== newKlineRaw.start) {
       printKlineData(this.lastKlineRaw);
       // TODO: 새 캔들 생성됨. RSI 계산 등 알고리즘 적용
@@ -61,9 +64,9 @@ export class BybitService {
     this.lastKlineRaw = newKlineRaw;
   }
 
-  async registerClient(params: BybitInsert) {
+  async registerClient(params: ClientInsert) {
     const newClientInfos = await db
-      .insert(bybitTable)
+      .insert(clientTable)
       .values({
         ...params,
       })
@@ -72,11 +75,10 @@ export class BybitService {
       throw new Error("Failed to register client");
     }
     const newClientInfo = newClientInfos[0];
-    console.debug(newClientInfo);
     const newClient = new BybitClient({
       apiKey: newClientInfo.apiKey,
       apiSecret: newClientInfo.apiSecret,
-      testnet: newClientInfo.testnet === 1,
+      testnet: newClientInfo.testnet,
     });
     this.clients.push(newClient);
     return newClientInfo;

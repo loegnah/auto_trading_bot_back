@@ -18,7 +18,7 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
     async ({ body, bybitService }) => {
       const newClientInfo = await bybitService.registerClient({
         ...body,
-        testnet: body.testnet ? 1 : 0,
+        category: "bybit",
       });
       return {
         newClientInfo,
@@ -26,10 +26,11 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
     },
     {
       body: t.Object({
+        name: t.String(),
         apiKey: t.String(),
         apiSecret: t.String(),
         userId: t.Number(),
-        testnet: t.Optional(t.Boolean()),
+        testnet: t.Boolean(),
       }),
     },
   )

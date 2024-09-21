@@ -1,11 +1,11 @@
 {
-  "id": "a7f19b72-973b-494c-accc-9c184af5b54a",
+  "id": "fee9f232-0a21-4147-afbe-ffd36e8c20a7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.bybit": {
-      "name": "bybit",
+    "public.client": {
+      "name": "client",
       "schema": "",
       "columns": {
         "id": {
@@ -14,24 +14,45 @@
           "primaryKey": true,
           "notNull": true
         },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "api_key": {
           "name": "api_key",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "''"
         },
         "api_secret": {
           "name": "api_secret",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "''"
         },
         "testnet": {
           "name": "testnet",
-          "type": "integer",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false,
-          "default": 0
+          "notNull": true,
+          "default": false
+        },
+        "meta": {
+          "name": "meta",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
         },
         "user_id": {
           "name": "user_id",
@@ -42,12 +63,79 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bybit_user_id_user_id_fk": {
-          "name": "bybit_user_id_user_id_fk",
-          "tableFrom": "bybit",
+        "client_user_id_user_id_fk": {
+          "name": "client_user_id_user_id_fk",
+          "tableFrom": "client",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.strategy": {
+      "name": "strategy",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "topics": {
+          "name": "topics",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "symbol": {
+          "name": "symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "interval": {
+          "name": "interval",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meta": {
+          "name": "meta",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "client_id": {
+          "name": "client_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "strategy_client_id_client_id_fk": {
+          "name": "strategy_client_id_client_id_fk",
+          "tableFrom": "strategy",
+          "tableTo": "client",
+          "columnsFrom": [
+            "client_id"
           ],
           "columnsTo": [
             "id"
