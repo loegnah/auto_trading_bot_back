@@ -5,10 +5,13 @@ import { getMockTopics } from "@/coin/bybit/bybit.mock";
 import { KlineRaw } from "@/coin/bybit/bybit.type";
 import { db } from "@/db";
 import { BybitInsert, bybitTable } from "@/schema/bybitSchema";
+import { Strategy } from "@/strategy/strategy";
+import { StrategyCoinBybitRsi } from "@/strategy/strategy.coin-bybit-rsi";
 
 export class BybitService {
   private wsClient = new BybitWsClient();
   private clients: BybitClient[] = [];
+  private strategies: Strategy[] = [];
   private lastKlineRaw: KlineRaw | null = null;
 
   constructor() {
@@ -18,6 +21,17 @@ export class BybitService {
   async init() {
     await this.loadWsClient();
     await this.loadClients();
+    this.strategies.push(
+      new StrategyCoinBybitRsi({
+        name: "RSI",
+        client: this.clients.filter((c) => !c.testnet)[0],
+        topics: ["kline.3.BTCUSDT"],
+        sourceType: "ohlc",
+        symbol: "BTCUSDT",
+        interval: "3",
+        period: 14,
+      }),
+    );
   }
 
   private async loadWsClient() {
@@ -27,9 +41,6 @@ export class BybitService {
 
   private async loadClients() {
     const clientInfos = await db.query.bybitTable.findMany();
-    if (!clientInfos.length) {
-      throw new Error("No clients found");
-    }
     this.clients = clientInfos.map(
       (info) =>
         new BybitClient({
@@ -42,6 +53,7 @@ export class BybitService {
 
   private async handleUpdate(res: any) {
     const newKlineRaw = res.data[0];
+    // console.log(newKlineRaw);
     if (this.lastKlineRaw && this.lastKlineRaw.start !== newKlineRaw.start) {
       printKlineData(this.lastKlineRaw);
       // TODO: 새 캔들 생성됨. RSI 계산 등 알고리즘 적용

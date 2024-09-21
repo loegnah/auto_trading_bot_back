@@ -1,6 +1,6 @@
 import { KlineIntervalV3 } from "bybit-api";
 
-export const INTERVAL_LIST: KlineIntervalV3[] = [
+export const INTERVAL: KlineIntervalV3[] = [
   "1",
   "3",
   "5",
@@ -15,5 +15,6 @@ export const INTERVAL_LIST: KlineIntervalV3[] = [
   "W",
   "M",
 ] as const;
+export type Interval = (typeof INTERVAL)[number];
 
 export const KLINE_FIELDS = ["start", "open", "high", "low", "close"] as const;
