@@ -4,11 +4,14 @@ import { printKlineData } from "@/coin/bybit/bybit.lib";
 import { getMockTopics } from "@/coin/bybit/bybit.mock";
 import { KlineRaw } from "@/coin/bybit/bybit.type";
 import { db } from "@/db";
-import { BybitInsert, bybitTable } from "@/schema/bybitSchema";
+import { ClientInsert, clientTable } from "@/schema/clientSchema.ts";
+import { Strategy } from "@/strategy/strategy";
+import { StrategyCoinBybitRsi } from "@/strategy/strategy.coin-bybit-rsi";
 
 export class BybitService {
   private wsClient = new BybitWsClient();
   private clients: BybitClient[] = [];
+  private strategies: Strategy[] = [];
   private lastKlineRaw: KlineRaw | null = null;
 
   constructor() {
@@ -18,6 +21,7 @@ export class BybitService {
   async init() {
     await this.loadWsClient();
     await this.loadClients();
+    await this.loadStrategies();
   }
 
   private async loadWsClient() {
@@ -26,17 +30,28 @@ export class BybitService {
   }
 
   private async loadClients() {
-    const clientInfos = await db.query.bybitTable.findMany();
-    if (!clientInfos.length) {
-      throw new Error("No clients found");
-    }
+    const clientInfos = await db.query.clientTable.findMany();
     this.clients = clientInfos.map(
       (info) =>
         new BybitClient({
           apiKey: info.apiKey,
           apiSecret: info.apiSecret,
-          testnet: info.testnet === 1,
+          testnet: info.testnet,
         }),
+    );
+  }
+
+  private async loadStrategies() {
+    this.strategies.push(
+      new StrategyCoinBybitRsi({
+        name: "RSI",
+        client: this.clients.filter((c) => !c.testnet)[0],
+        topics: ["kline.3.BTCUSDT"],
+        sourceType: "ohlc",
+        symbol: "BTCUSDT",
+        interval: "3",
+        period: 14,
+      }),
     );
   }
 
@@ -49,9 +64,9 @@ export class BybitService {
     this.lastKlineRaw = newKlineRaw;
   }
 
-  async registerClient(params: BybitInsert) {
+  async registerClient(params: ClientInsert) {
     const newClientInfos = await db
-      .insert(bybitTable)
+      .insert(clientTable)
       .values({
         ...params,
       })
@@ -60,11 +75,10 @@ export class BybitService {
       throw new Error("Failed to register client");
     }
     const newClientInfo = newClientInfos[0];
-    console.debug(newClientInfo);
     const newClient = new BybitClient({
       apiKey: newClientInfo.apiKey,
       apiSecret: newClientInfo.apiSecret,
-      testnet: newClientInfo.testnet === 1,
+      testnet: newClientInfo.testnet,
     });
     this.clients.push(newClient);
     return newClientInfo;

@@ -1,7 +1,8 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { env } from "@/lib/env";
-import { bybitRelations, bybitTable } from "@/schema/bybitSchema";
+import { clientRelations, clientTable } from "@/schema/clientSchema.ts";
+import { strategyRelations, strategyTable } from "@/schema/strategySchema.ts";
 import { userRelations, userTable } from "@/schema/userSchema";
 
 function connectDB() {
@@ -10,8 +11,10 @@ function connectDB() {
     schema: {
       userTable,
       userRelations,
-      bybitTable,
-      bybitRelations,
+      clientTable,
+      clientRelations,
+      strategyTable,
+      strategyRelations,
     },
   });
 }

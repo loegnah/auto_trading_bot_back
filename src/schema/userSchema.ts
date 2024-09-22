@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, serial, text } from "drizzle-orm/pg-core";
-import { bybitTable } from "@/schema/bybitSchema";
+import { clientTable } from "@/schema/clientSchema.ts";
 
 export const userTable = pgTable("user", {
   id: serial("id").primaryKey(),
@@ -9,7 +9,7 @@ export const userTable = pgTable("user", {
 });
 
 export const userRelations = relations(userTable, ({ many }) => ({
-  bybit: many(bybitTable),
+  bybit: many(clientTable),
 }));
 
 export type User = typeof userTable.$inferSelect;

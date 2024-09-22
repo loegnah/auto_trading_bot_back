@@ -4,6 +4,7 @@ import { Kline } from "@/coin/bybit/bybit.type";
 
 export class BybitClient {
   private readonly client: RestClientV5;
+  testnet: boolean;
 
   constructor({
     apiKey: key,
@@ -15,6 +16,7 @@ export class BybitClient {
     testnet: boolean;
   }) {
     this.client = new RestClientV5({ key, secret, testnet });
+    this.testnet = testnet;
     console.debug(`[bybit-client] created (key: "${key}")`);
   }
 

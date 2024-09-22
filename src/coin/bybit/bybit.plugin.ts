@@ -1,9 +1,8 @@
 import { Elysia, t } from "elysia";
 import { BybitClient } from "@/coin/bybit/bybit.client";
-import { INTERVAL_LIST } from "@/coin/bybit/bybit.const";
+import { INTERVAL } from "@/coin/bybit/bybit.const";
 import { BybitService } from "@/coin/bybit/bybit.service";
 import { env } from "@/lib/env";
-import { calculateRSIs } from "@/lib/rsi";
 
 export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
   .decorate({
@@ -19,7 +18,7 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
     async ({ body, bybitService }) => {
       const newClientInfo = await bybitService.registerClient({
         ...body,
-        testnet: body.testnet ? 1 : 0,
+        category: "bybit",
       });
       return {
         newClientInfo,
@@ -27,10 +26,11 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
     },
     {
       body: t.Object({
+        name: t.String(),
         apiKey: t.String(),
         apiSecret: t.String(),
         userId: t.Number(),
-        testnet: t.Optional(t.Boolean()),
+        testnet: t.Boolean(),
       }),
     },
   )
@@ -48,33 +48,33 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
     {
       query: t.Object({
         symbol: t.String(),
-        interval: t.Union(INTERVAL_LIST.map((k) => t.Literal(k))),
+        interval: t.Union(INTERVAL.map((k) => t.Literal(k))),
         count: t.Number(),
       }),
     },
   )
-  .get(
-    "/rsi/get",
-    async ({ query, BybitClient }) => {
-      const klines = await BybitClient.getKlines({
-        symbol: query.symbol,
-        interval: query.interval,
-        count: 200,
-        endTimeStamp: Date.now(),
-      });
-      const ohlcAvgPrices = klines
-        .map(({ open, high, low, close }) => (open + high + low + close) / 4)
-        .reverse();
-      const rsiList = calculateRSIs(ohlcAvgPrices);
-      return rsiList;
-    },
-    {
-      query: t.Object({
-        symbol: t.String(),
-        interval: t.Union(INTERVAL_LIST.map((k) => t.Literal(k))),
-      }),
-    },
-  )
+  // .get(
+  //   "/rsi/get",
+  //   async ({ query, BybitClient }) => {
+  //     const klines = await BybitClient.getKlines({
+  //       symbol: query.symbol,
+  //       interval: query.interval,
+  //       count: 200,
+  //       endTimeStamp: Date.now(),
+  //     });
+  //     const ohlcAvgPrices = klines
+  //       .map(({ open, high, low, close }) => (open + high + low + close) / 4)
+  //       .reverse();
+  //     const rsiList = calculateRSIs(ohlcAvgPrices);
+  //     return rsiList;
+  //   },
+  //   {
+  //     query: t.Object({
+  //       symbol: t.String(),
+  //       interval: t.Union(INTERVAL.map((k) => t.Literal(k))),
+  //     }),
+  //   },
+  // )
   .post(
     "/order/create",
     async ({ body, BybitClient }) => {
