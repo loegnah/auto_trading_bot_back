@@ -11,7 +11,7 @@
     "format": "prettier --write \"{src,test}/**/*.{js,jsx,ts,tsx,md,json,css,html}\""
   },
   "dependencies": {
-    "@chneau/elysia-logger": "^1.0.2",
+    "@chneau/elysia-logger": "^1.0.3",
     "@elysiajs/swagger": "^1.1.1",
     "@sinclair/typebox": "^0.33.12",
     "bybit-api": "^3.10.16",

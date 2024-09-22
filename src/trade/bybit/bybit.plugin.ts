@@ -1,15 +1,15 @@
 import { Elysia, t } from "elysia";
-import { BybitClient } from "@/coin/bybit/bybit.client";
-import { INTERVAL } from "@/coin/bybit/bybit.const";
-import { BybitService } from "@/coin/bybit/bybit.service";
-import { env } from "@/lib/env";
+import { env } from "@/common/env.ts";
+import { BybitClient } from "@/trade/bybit/bybit.client.ts";
+import { BybitService } from "@/trade/bybit/bybit.service.ts";
+import { INTERVAL } from "@/trade/lib/tradeConst.ts";
 
 export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
   .decorate({
     BybitClient: new BybitClient({
       apiKey: env.BYBIT_API_KEY,
       apiSecret: env.BYBIT_API_SECRET,
-      testnet: !!env.BYBIT_TESTNET,
+      testnet: env.BYBIT_TESTNET,
     }),
     bybitService: new BybitService(),
   })
@@ -37,7 +37,7 @@ export const bybitPlugin = new Elysia({ prefix: "/bybit", name: "bybit" })
   .get(
     "/kline/get",
     async ({ query, BybitClient }) => {
-      const klines = await BybitClient.getKlines({
+      const klines = await BybitClient.getCandles({
         symbol: query.symbol,
         interval: query.interval,
         count: query.count,

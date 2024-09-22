@@ -3,7 +3,7 @@ import {
   InteractionType,
   verifyKey,
 } from "discord-interactions";
-import { env } from "@/lib/env";
+import { env } from "@/common/env";
 
 export class DiscordService {
   async verify({ headers, body }: { headers: any; body: any }) {

@@ -1,6 +1,6 @@
 import { KlineIntervalV3, RestClientV5 } from "bybit-api";
 import dayjs from "dayjs";
-import { Kline } from "@/coin/bybit/bybit.type";
+import { Candle } from "@/trade/lib/tradeType.ts";
 
 export class BybitClient {
   private readonly client: RestClientV5;
@@ -20,7 +20,7 @@ export class BybitClient {
     console.debug(`[bybit-client] created (key: "${key}")`);
   }
 
-  async getKlines({
+  async getCandles({
     symbol,
     interval,
     count,
@@ -30,8 +30,8 @@ export class BybitClient {
     interval: KlineIntervalV3;
     count: number;
     endTimeStamp?: number;
-  }): Promise<Kline[]> {
-    const klines = await this.client.getKline({
+  }): Promise<Candle[]> {
+    const candles = await this.client.getKline({
       category: "linear",
       symbol,
       interval,
@@ -41,7 +41,7 @@ export class BybitClient {
       limit: count + 1,
     });
 
-    return klines.result.list.slice(1).map((data) => ({
+    return candles.result.list.slice(1).map((data) => ({
       start: Number(data[0]),
       open: Number(data[1]),
       high: Number(data[2]),

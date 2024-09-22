@@ -1,18 +1,18 @@
-import { BybitWsClient } from "@/coin/bybit/bybit-ws.client";
-import { BybitClient } from "@/coin/bybit/bybit.client";
-import { printKlineData } from "@/coin/bybit/bybit.lib";
-import { getMockTopics } from "@/coin/bybit/bybit.mock";
-import { KlineRaw } from "@/coin/bybit/bybit.type";
-import { db } from "@/db";
+import { db } from "@/db.ts";
 import { ClientInsert, clientTable } from "@/schema/clientSchema.ts";
-import { Strategy } from "@/strategy/strategy";
-import { StrategyCoinBybitRsi } from "@/strategy/strategy.coin-bybit-rsi";
+import { BybitClient } from "@/trade/bybit/bybit.client.ts";
+import { BybitSocket } from "@/trade/bybit/bybit.socket.ts";
+import { printCandleData } from "@/trade/lib/print.ts";
+import { getMockTopics } from "@/trade/lib/tradeMock.ts";
+import { CandleRaw } from "@/trade/lib/tradeType.ts";
+import { StrategyCoinBybitRsi } from "@/trade/strategy/strategy.coin-bybit-rsi.ts";
+import { Strategy } from "@/trade/strategy/strategy.ts";
 
 export class BybitService {
-  private wsClient = new BybitWsClient();
+  private wsClient = new BybitSocket();
   private clients: BybitClient[] = [];
   private strategies: Strategy[] = [];
-  private lastKlineRaw: KlineRaw | null = null;
+  private lastKlineRaw: CandleRaw | null = null;
 
   constructor() {
     this.init();
@@ -58,7 +58,7 @@ export class BybitService {
   private async handleUpdate(res: any) {
     const newKlineRaw = res.data[0];
     if (this.lastKlineRaw && this.lastKlineRaw.start !== newKlineRaw.start) {
-      printKlineData(this.lastKlineRaw);
+      printCandleData(this.lastKlineRaw);
       // TODO: 새 캔들 생성됨. RSI 계산 등 알고리즘 적용
     }
     this.lastKlineRaw = newKlineRaw;

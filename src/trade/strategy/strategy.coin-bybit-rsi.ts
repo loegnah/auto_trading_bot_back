@@ -1,8 +1,7 @@
-import { BybitClient } from "@/coin/bybit/bybit.client";
-import { Interval } from "@/coin/bybit/bybit.const";
-import { calcRsiHistory } from "@/lib/rsi";
-import { SourceType, Topic } from "@/lib/trade";
-import { Strategy } from "@/strategy/strategy";
+import { BybitClient } from "@/trade/bybit/bybit.client.ts";
+import { calcRsiHistory } from "@/trade/lib/rsi.ts";
+import { Interval, SourceType, Topic } from "@/trade/lib/tradeConst.ts";
+import { Strategy } from "@/trade/strategy/strategy.ts";
 
 export class StrategyCoinBybitRsi extends Strategy {
   client: BybitClient;
@@ -47,7 +46,7 @@ export class StrategyCoinBybitRsi extends Strategy {
   }
 
   async calcInitialRsi() {
-    const klines = await this.client.getKlines({
+    const klines = await this.client.getCandles({
       symbol: this.symbol,
       interval: this.interval,
       count: 200,

@@ -1,4 +1,4 @@
-import { Topic } from "@/lib/trade";
+import { Topic } from "@/trade/lib/tradeConst.ts";
 
 export abstract class Strategy {
   abstract name: string;

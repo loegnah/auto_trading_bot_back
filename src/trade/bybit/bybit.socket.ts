@@ -1,6 +1,6 @@
 import { WebsocketClient } from "bybit-api";
 
-export class BybitWsClient {
+export class BybitSocket {
   private readonly wsClient: WebsocketClient;
 
   constructor() {
