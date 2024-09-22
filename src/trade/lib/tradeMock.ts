@@ -1,5 +1,5 @@
-import { env } from "@/lib/env";
-import { Topic } from "@/lib/trade";
+import { env } from "@/common/env.ts";
+import { Topic } from "@/trade/lib/tradeConst.ts";
 
 export async function getMockClientAuths() {
   return [
@@ -12,5 +12,5 @@ export async function getMockClientAuths() {
 }
 
 export async function getMockTopics(): Promise<Topic[]> {
-  return ["kline.3.BTCUSDT"];
+  return ["kline.3.BTCUSDT", "kline.3.ETHUSDT"];
 }

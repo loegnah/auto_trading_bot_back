@@ -18,18 +18,17 @@
     "noFallthroughCasesInSwitch": true,
 
     // Some stricter flags
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    //    "noUnusedLocals": true,
+    //    "noUnusedParameters": true,
     "noPropertyAccessFromIndexSignature": true,
 
     "types": [
       "bun-types"
     ] /* Specify type package names to be included without being referenced in a source file. */,
 
-    // paths
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"],
-      "@root/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "drizzle.config.ts"]

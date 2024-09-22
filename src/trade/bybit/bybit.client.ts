@@ -1,37 +1,40 @@
-import { KlineIntervalV3, RestClientV5 } from "bybit-api";
+import { RestClientV5 } from "bybit-api";
 import dayjs from "dayjs";
-import { Kline } from "@/coin/bybit/bybit.type";
+import { Interval } from "@/trade/lib/tradeConst.ts";
+import { Candle } from "@/trade/lib/tradeType.ts";
+import { TradeClient } from "@/trade/model/tradeClient.ts";
 
-export class BybitClient {
-  private readonly client: RestClientV5;
-  testnet: boolean;
+export class BybitClient implements TradeClient {
+  name: string;
+  private client: RestClientV5;
 
   constructor({
+    name,
     apiKey: key,
     apiSecret: secret,
     testnet,
   }: {
+    name: string;
     apiKey: string;
     apiSecret: string;
     testnet: boolean;
   }) {
+    this.name = name;
     this.client = new RestClientV5({ key, secret, testnet });
-    this.testnet = testnet;
-    console.debug(`[bybit-client] created (key: "${key}")`);
   }
 
-  async getKlines({
+  async getCandles({
     symbol,
     interval,
     count,
     endTimeStamp = dayjs().unix(),
   }: {
     symbol: string;
-    interval: KlineIntervalV3;
+    interval: Interval;
     count: number;
     endTimeStamp?: number;
-  }): Promise<Kline[]> {
-    const klines = await this.client.getKline({
+  }): Promise<Candle[]> {
+    const candles = await this.client.getKline({
       category: "linear",
       symbol,
       interval,
@@ -41,7 +44,7 @@ export class BybitClient {
       limit: count + 1,
     });
 
-    return klines.result.list.slice(1).map((data) => ({
+    return candles.result.list.slice(1).map((data) => ({
       start: Number(data[0]),
       open: Number(data[1]),
       high: Number(data[2]),

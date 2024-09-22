@@ -1,4 +1,4 @@
-export type KlineRaw = {
+export type CandleRaw = {
   start: string;
   open: string;
   high: string;
@@ -6,7 +6,7 @@ export type KlineRaw = {
   close: string;
 };
 
-export type Kline = {
+export type Candle = {
   start: number;
   open: number;
   high: number;
