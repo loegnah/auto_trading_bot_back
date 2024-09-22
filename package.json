@@ -1,5 +1,5 @@
 {
-  "name": "auto_trading_bot_back",
+  "name": "auto_trading_service",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "build": "bun build src/index.ts --target bun --outdir ./dist",
