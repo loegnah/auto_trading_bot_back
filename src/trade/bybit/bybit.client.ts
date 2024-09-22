@@ -1,23 +1,26 @@
-import { KlineIntervalV3, RestClientV5 } from "bybit-api";
+import { RestClientV5 } from "bybit-api";
 import dayjs from "dayjs";
+import { Interval } from "@/trade/lib/tradeConst.ts";
 import { Candle } from "@/trade/lib/tradeType.ts";
+import { TradeClient } from "@/trade/model/tradeClient.ts";
 
-export class BybitClient {
-  private readonly client: RestClientV5;
-  testnet: boolean;
+export class BybitClient implements TradeClient {
+  name: string;
+  private client: RestClientV5;
 
   constructor({
+    name,
     apiKey: key,
     apiSecret: secret,
     testnet,
   }: {
+    name: string;
     apiKey: string;
     apiSecret: string;
     testnet: boolean;
   }) {
+    this.name = name;
     this.client = new RestClientV5({ key, secret, testnet });
-    this.testnet = testnet;
-    console.debug(`[bybit-client] created (key: "${key}")`);
   }
 
   async getCandles({
@@ -27,7 +30,7 @@ export class BybitClient {
     endTimeStamp = dayjs().unix(),
   }: {
     symbol: string;
-    interval: KlineIntervalV3;
+    interval: Interval;
     count: number;
     endTimeStamp?: number;
   }): Promise<Candle[]> {

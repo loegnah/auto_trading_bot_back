@@ -1,27 +1,20 @@
 import { BybitClient } from "@/trade/bybit/bybit.client.ts";
 import { calcRsiHistory } from "@/trade/lib/rsi.ts";
 import { Interval, SourceType, Topic } from "@/trade/lib/tradeConst.ts";
-import { Strategy } from "@/trade/strategy/strategy.ts";
+import { TradeClient } from "@/trade/model/tradeClient.ts";
+import { TradeStrategy } from "@/trade/model/tradeStrategy.ts";
 
-export class StrategyCoinBybitRsi extends Strategy {
-  client: BybitClient;
+export class StrategyRsi implements TradeStrategy {
+  client: TradeClient;
   name: string;
   topics: Topic[];
   private lastRsi: number | null = null;
-  private readonly symbol: string;
-  private readonly interval: Interval;
-  private readonly rsiPeriod: number;
-  private readonly sourceType: SourceType;
+  private symbol: string;
+  private interval: Interval;
+  private rsiPeriod: number;
+  private sourceType: SourceType;
 
-  constructor({
-    name,
-    client,
-    topics: followTopics,
-    sourceType,
-    symbol,
-    interval,
-    period,
-  }: {
+  constructor(params: {
     name: string;
     client: BybitClient;
     topics: Topic[];
@@ -30,14 +23,13 @@ export class StrategyCoinBybitRsi extends Strategy {
     interval: Interval;
     period: number;
   }) {
-    super();
-    this.name = name;
-    this.topics = followTopics;
-    this.client = client;
-    this.sourceType = sourceType;
-    this.symbol = symbol;
-    this.interval = interval;
-    this.rsiPeriod = period;
+    this.name = params.name;
+    this.topics = params.topics;
+    this.client = params.client;
+    this.sourceType = params.sourceType;
+    this.symbol = params.symbol;
+    this.interval = params.interval;
+    this.rsiPeriod = params.period;
     this.init();
   }
 
@@ -46,18 +38,18 @@ export class StrategyCoinBybitRsi extends Strategy {
   }
 
   async calcInitialRsi() {
-    const klines = await this.client.getCandles({
+    const candles = await this.client.getCandles({
       symbol: this.symbol,
       interval: this.interval,
       count: 200,
       endTimeStamp: Date.now(),
     });
 
-    const prices = klines
-      .map((kline) =>
+    const prices = candles
+      .map((candle) =>
         this.sourceType === "close"
-          ? kline.close
-          : (kline.open + kline.high + kline.low + kline.close) / 4,
+          ? candle.close
+          : (candle.open + candle.high + candle.low + candle.close) / 4,
       )
       .reverse();
     const rsiHistory = calcRsiHistory({ prices, period: this.rsiPeriod });
