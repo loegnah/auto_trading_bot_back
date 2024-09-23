@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zBoolean } from "@/common/validate.ts";
+import { zBoolean } from "./validate";
 
 export const env = z
   .object({

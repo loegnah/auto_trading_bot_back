@@ -1,8 +1,8 @@
 import { RestClientV5 } from "bybit-api";
 import dayjs from "dayjs";
-import { Interval } from "@/trade/lib/tradeConst.ts";
-import { Candle } from "@/trade/lib/tradeType.ts";
-import { TradeClient } from "@/trade/model/tradeClient.ts";
+import { Interval } from "../lib/tradeConst";
+import { Candle } from "../lib/tradeType";
+import { TradeClient } from "../model/tradeClient";
 
 export class BybitClient implements TradeClient {
   name: string;

@@ -1,5 +1,5 @@
-import { Topic } from "@/trade/lib/tradeConst.ts";
-import { TradeClient } from "@/trade/model/tradeClient.ts";
+import { Topic } from "../lib/tradeConst";
+import { TradeClient } from "./tradeClient";
 
 export interface TradeStrategy {
   name: string;

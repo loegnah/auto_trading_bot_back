@@ -1,8 +1,7 @@
-import { BybitSocket } from "@/trade/bybit/bybit.socket";
-import { printCandleData } from "@/trade/lib/print.ts";
-import { getMockTopics } from "@/trade/lib/tradeMock.ts";
-import { TradeBot } from "@/trade/model/tradeBot";
-import { TradeSocket } from "@/trade/model/tradeSocket";
+import { BybitSocket } from "./bybit/bybit.socket";
+import { getMockTopics } from "./lib/tradeMock";
+import { TradeBot } from "./model/tradeBot";
+import { TradeSocket } from "./model/tradeSocket";
 
 export class TradeService {
   private sockets: TradeSocket[] = [new BybitSocket()];

@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
-import { db } from "@/db";
-import { userTable } from "@/schema/userSchema";
+import { db } from "../db";
+import { userTable } from "../schema/userSchema";
 
 export const userPlugin = new Elysia({ prefix: "/user", name: "user" }).post(
   "/create",

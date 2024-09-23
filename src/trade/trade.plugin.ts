@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
-import { bybitPlugin } from "@/trade/bybit/bybit.plugin";
-import { TradeService } from "@/trade/trade.service";
+import { bybitPlugin } from "./bybit/bybit.plugin";
+import { TradeService } from "./trade.service";
 
 export const tradePlugin = new Elysia({ name: "trade" })
   .decorate({

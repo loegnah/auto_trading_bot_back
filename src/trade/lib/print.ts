@@ -1,5 +1,5 @@
-import { CANDLE_FIELDS } from "@/trade/lib/tradeConst.ts";
-import { Candle, CandleRaw } from "@/trade/lib/tradeType.ts";
+import { CANDLE_FIELDS } from "./tradeConst";
+import { Candle, CandleRaw } from "./tradeType";
 
 export function printCandleData(data: CandleRaw | Candle) {
   const printList: string[] = CANDLE_FIELDS.map(

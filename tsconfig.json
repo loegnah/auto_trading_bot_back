@@ -24,12 +24,7 @@
 
     "types": [
       "bun-types"
-    ] /* Specify type package names to be included without being referenced in a source file. */,
-
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    ] /* Specify type package names to be included without being referenced in a source file. */
   },
   "include": ["src", "drizzle.config.ts"]
 }

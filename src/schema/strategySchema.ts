@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, json, pgTable, serial, text } from "drizzle-orm/pg-core";
-import { clientTable } from "@/schema/clientSchema.ts";
-import { TOPIC } from "@/trade/lib/tradeConst.ts";
+import { TOPIC } from "../trade/lib/tradeConst";
+import { clientTable } from "./clientSchema";
 
 export const strategyTable = pgTable("strategy", {
   id: serial("id").primaryKey(),

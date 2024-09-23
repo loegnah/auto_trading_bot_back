@@ -1,8 +1,8 @@
-import { BybitClient } from "@/trade/bybit/bybit.client.ts";
-import { calcRsiHistory } from "@/trade/lib/rsi.ts";
-import { Interval, SourceType, Topic } from "@/trade/lib/tradeConst.ts";
-import { TradeClient } from "@/trade/model/tradeClient.ts";
-import { TradeStrategy } from "@/trade/model/tradeStrategy.ts";
+import { BybitClient } from "../bybit/bybit.client";
+import { calcRsiHistory } from "../lib/rsi";
+import { Interval, SourceType, Topic } from "../lib/tradeConst";
+import { TradeClient } from "../model/tradeClient";
+import { TradeStrategy } from "../model/tradeStrategy";
 
 export class StrategyRsi implements TradeStrategy {
   client: TradeClient;

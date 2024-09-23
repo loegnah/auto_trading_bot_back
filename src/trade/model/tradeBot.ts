@@ -1,5 +1,5 @@
-import { TradeClient } from "@/trade/model/tradeClient";
-import { TradeStrategy } from "@/trade/model/tradeStrategy";
+import { TradeClient } from "./tradeClient";
+import { TradeStrategy } from "./tradeStrategy";
 
 export interface TradeBot {
   name: string;

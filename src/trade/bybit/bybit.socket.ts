@@ -1,7 +1,7 @@
 import { WebsocketClient } from "bybit-api";
-import { printCandleData } from "@/trade/lib/print";
-import { Candle } from "@/trade/lib/tradeType";
-import { TradeSocket } from "@/trade/model/tradeSocket";
+import { printCandleData } from "../lib/print";
+import { Candle } from "../lib/tradeType";
+import { TradeSocket } from "../model/tradeSocket";
 
 export class BybitSocket implements TradeSocket {
   name = "bybit";
