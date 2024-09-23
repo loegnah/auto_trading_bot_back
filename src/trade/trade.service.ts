@@ -1,7 +1,7 @@
 import { BybitSocket } from "./bybit/bybit.socket";
 import { getMockTopics } from "./lib/tradeMock";
-import { TradeBot } from "./model/tradeBot";
-import { TradeSocket } from "./model/tradeSocket";
+import { TradeBot } from "./model/bot.model";
+import { TradeSocket } from "./model/socket.model";
 
 export class TradeService {
   private sockets: TradeSocket[] = [new BybitSocket()];

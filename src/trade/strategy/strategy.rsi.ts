@@ -2,8 +2,8 @@ import { BybitClient } from "../bybit/bybit.client";
 import { Interval, SourceType } from "../lib/candle";
 import { calcRsiHistory } from "../lib/rsi";
 import { Topic } from "../lib/topic";
-import { TradeClient } from "../model/tradeClient";
-import { TradeStrategy } from "../model/tradeStrategy";
+import { TradeClient } from "../model/client.model";
+import { TradeStrategy } from "../model/strategy.model";
 
 export class StrategyRsi implements TradeStrategy {
   client: TradeClient;

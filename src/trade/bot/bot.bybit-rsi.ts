@@ -1,6 +1,6 @@
-import { TradeBot } from "../model/tradeBot";
-import { TradeClient } from "../model/tradeClient";
-import { TradeStrategy } from "../model/tradeStrategy";
+import { TradeBot } from "../model/bot.model";
+import { TradeClient } from "../model/client.model";
+import { TradeStrategy } from "../model/strategy.model";
 
 export class BybitRsiBot implements TradeBot {
   name: string;

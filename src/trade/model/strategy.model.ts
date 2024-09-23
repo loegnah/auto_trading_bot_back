@@ -1,5 +1,5 @@
 import { Topic } from "../lib/topic";
-import { TradeClient } from "./tradeClient";
+import { TradeClient } from "./client.model";
 
 export interface TradeStrategy {
   name: string;
