@@ -1,9 +1,9 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { env } from "./common/env";
-import { clientRelations, clientTable } from "./schema/clientSchema";
-import { strategyRelations, strategyTable } from "./schema/strategySchema";
-import { userRelations, userTable } from "./schema/userSchema";
+import { clientRelations, clientTable } from "./schema/client.schema";
+import { strategyRelations, strategyTable } from "./schema/strategy.schema";
+import { userRelations, userTable } from "./schema/user.schema";
 
 function connectDB() {
   const pgClient = postgres(env.DB_URL);

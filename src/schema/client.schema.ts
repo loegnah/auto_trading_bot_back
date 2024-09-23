@@ -7,8 +7,8 @@ import {
   serial,
   text,
 } from "drizzle-orm/pg-core";
-import { strategyTable } from "./strategySchema";
-import { userTable } from "./userSchema";
+import { strategyTable } from "./strategy.schema";
+import { userTable } from "./user.schema";
 
 export const clientTable = pgTable("client", {
   id: serial("id").primaryKey(),
