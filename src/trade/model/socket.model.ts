@@ -1,5 +1,9 @@
-export interface TradeSocket {
-  name: string;
+export abstract class TradeSocket {
+  protected name: string;
 
-  subscribeTopics(topics: string[]): void;
+  constructor(params: { name: string }) {
+    this.name = params.name;
+  }
+
+  abstract subscribeTopics(topics: string[]): void;
 }

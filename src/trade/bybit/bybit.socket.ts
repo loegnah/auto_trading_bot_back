@@ -2,12 +2,12 @@ import { WebsocketClient } from "bybit-api";
 import { Candle, printCandleData } from "../lib/candle";
 import { TradeSocket } from "../model/socket.model";
 
-export class BybitSocket implements TradeSocket {
-  name = "bybit";
+export class BybitSocket extends TradeSocket {
   private wsClient: WebsocketClient;
   private latestCandleRaw: Candle | null = null;
 
   constructor() {
+    super({ name: "bybit" });
     this.wsClient = new WebsocketClient({
       market: "v5",
     });

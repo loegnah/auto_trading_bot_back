@@ -3,8 +3,7 @@ import dayjs from "dayjs";
 import { Candle, Interval } from "../lib/candle";
 import { TradeClient } from "../model/client.model";
 
-export class BybitClient implements TradeClient {
-  name: string;
+export class BybitClient extends TradeClient {
   private client: RestClientV5;
 
   constructor({
@@ -18,7 +17,7 @@ export class BybitClient implements TradeClient {
     apiSecret: string;
     testnet: boolean;
   }) {
-    this.name = name;
+    super({ name });
     this.client = new RestClientV5({ key, secret, testnet });
   }
 

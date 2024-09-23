@@ -1,9 +1,13 @@
 import { Candle, Interval } from "../lib/candle";
 
-export interface TradeClient {
-  name: string;
+export abstract class TradeClient {
+  protected name: string;
 
-  getCandles(params: {
+  constructor(params: { name: string }) {
+    this.name = params.name;
+  }
+
+  abstract getCandles(params: {
     symbol: string;
     interval: Interval;
     count: number;

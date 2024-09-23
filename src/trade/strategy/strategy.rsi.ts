@@ -5,10 +5,7 @@ import { Topic } from "../lib/topic";
 import { TradeClient } from "../model/client.model";
 import { TradeStrategy } from "../model/strategy.model";
 
-export class StrategyRsi implements TradeStrategy {
-  client: TradeClient;
-  name: string;
-  topics: Topic[];
+export class StrategyRsi extends TradeStrategy {
   private lastRsi: number | null = null;
   private symbol: string;
   private interval: Interval;
@@ -24,9 +21,8 @@ export class StrategyRsi implements TradeStrategy {
     interval: Interval;
     period: number;
   }) {
-    this.name = params.name;
-    this.topics = params.topics;
-    this.client = params.client;
+    super(params);
+    this.sourceType = params.sourceType;
     this.sourceType = params.sourceType;
     this.symbol = params.symbol;
     this.interval = params.interval;
