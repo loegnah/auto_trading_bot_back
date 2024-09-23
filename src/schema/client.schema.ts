@@ -7,7 +7,6 @@ import {
   serial,
   text,
 } from "drizzle-orm/pg-core";
-import { strategyTable } from "./strategy.schema";
 import { userTable } from "./user.schema";
 
 export const clientTable = pgTable("client", {
@@ -28,11 +27,6 @@ export const clientRelations = relations(clientTable, ({ one }) => ({
   user: one(userTable, {
     fields: [clientTable.userId],
     references: [userTable.id],
-  }),
-
-  strategy: one(strategyTable, {
-    fields: [clientTable.id],
-    references: [strategyTable.clientId],
   }),
 }));
 

@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
-import { integer, json, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { json, pgTable, serial, text } from "drizzle-orm/pg-core";
 import { TOPIC } from "../trade/lib/topic";
-import { clientTable } from "./client.schema";
 
 export const strategyTable = pgTable("strategy", {
   id: serial("id").primaryKey(),
@@ -10,18 +9,9 @@ export const strategyTable = pgTable("strategy", {
   symbol: text("symbol").notNull(),
   interval: text("interval").notNull(),
   meta: json("meta").notNull().default("{}"),
-
-  clientId: integer("client_id")
-    .references(() => clientTable.id)
-    .notNull(),
 });
 
-export const strategyRelations = relations(strategyTable, ({ one }) => ({
-  bybitClient: one(clientTable, {
-    fields: [strategyTable.clientId],
-    references: [clientTable.id],
-  }),
-}));
+export const strategyRelations = relations(strategyTable, ({}) => ({}));
 
 export type Strategy = typeof strategyTable.$inferSelect;
 export type StrategyInsert = typeof strategyTable.$inferInsert;
