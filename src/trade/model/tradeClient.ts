@@ -1,5 +1,4 @@
-import { Interval } from "../lib/tradeConst";
-import { Candle } from "../lib/tradeType";
+import { Candle, Interval } from "../lib/candle";
 
 export interface TradeClient {
   name: string;

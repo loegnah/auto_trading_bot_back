@@ -1,4 +1,4 @@
-import { Topic } from "../lib/tradeConst";
+import { Topic } from "../lib/topic";
 import { TradeClient } from "./tradeClient";
 
 export interface TradeStrategy {

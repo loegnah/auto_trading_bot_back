@@ -1,5 +1,5 @@
 import { env } from "../../common/env";
-import { Topic } from "./tradeConst";
+import { Topic } from "./topic";
 
 export async function getMockClientAuths() {
   return [

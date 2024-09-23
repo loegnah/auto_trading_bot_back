@@ -1,6 +1,7 @@
 import { BybitClient } from "../bybit/bybit.client";
+import { Interval, SourceType } from "../lib/candle";
 import { calcRsiHistory } from "../lib/rsi";
-import { Interval, SourceType, Topic } from "../lib/tradeConst";
+import { Topic } from "../lib/topic";
 import { TradeClient } from "../model/tradeClient";
 import { TradeStrategy } from "../model/tradeStrategy";
 

@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { integer, json, pgTable, serial, text } from "drizzle-orm/pg-core";
-import { TOPIC } from "../trade/lib/tradeConst";
+import { TOPIC } from "../trade/lib/topic";
 import { clientTable } from "./client.schema";
 
 export const strategyTable = pgTable("strategy", {
