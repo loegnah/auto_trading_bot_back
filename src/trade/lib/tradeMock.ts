@@ -12,5 +12,5 @@ export async function getMockClientAuths() {
 }
 
 export async function getMockTopics(): Promise<Topic[]> {
-  return ["kline.3.BTCUSDT", "kline.3.ETHUSDT"];
+  return ["kline.1.BTCUSDT", "kline.3.BTCUSDT", "kline.3.ETHUSDT"];
 }

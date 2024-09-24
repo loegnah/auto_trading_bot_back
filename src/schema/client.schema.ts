@@ -8,13 +8,14 @@ import {
   text,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
+import { CATEGORY } from "../trade/lib/category";
 import { botTable } from "./bot.schema";
 import { userTable } from "./user.schema";
 
 export const clientTable = pgTable("client", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  category: text("category", { enum: ["bybit"] }).notNull(),
+  category: text("category", { enum: CATEGORY }).notNull(),
   apiKey: text("api_key").notNull().default(""),
   apiSecret: text("api_secret").notNull().default(""),
   testnet: boolean("testnet").notNull().default(false),
