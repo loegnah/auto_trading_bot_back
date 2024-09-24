@@ -7,6 +7,7 @@ import {
   serial,
   text,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { botTable } from "./bot.schema";
 import { userTable } from "./user.schema";
 
@@ -32,5 +33,8 @@ export const clientRelations = relations(clientTable, ({ one, many }) => ({
   bots: many(botTable),
 }));
 
-export type Client = typeof clientTable.$inferSelect;
-export type ClientInsert = typeof clientTable.$inferInsert;
+export const clientSchema = createSelectSchema(clientTable);
+export const clientInsertSchema = createInsertSchema(clientTable);
+
+export type Client = typeof clientSchema.static;
+export type ClientInsert = typeof clientInsertSchema.static;

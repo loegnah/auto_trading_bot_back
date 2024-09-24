@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { integer, json, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { clientTable } from "./client.schema";
 import { strategyTable } from "./strategy.schema";
 
@@ -27,3 +28,9 @@ export const botRelations = relations(botTable, ({ one }) => ({
     references: [strategyTable.id],
   }),
 }));
+
+export const botSchema = createSelectSchema(botTable);
+export const botInsertSchema = createInsertSchema(botTable);
+
+export type Bot = typeof botSchema.static;
+export type BotInsert = typeof botInsertSchema.static;
