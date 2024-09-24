@@ -7,6 +7,7 @@ import {
   serial,
   text,
 } from "drizzle-orm/pg-core";
+import { botTable } from "./bot.schema";
 import { userTable } from "./user.schema";
 
 export const clientTable = pgTable("client", {
@@ -23,11 +24,12 @@ export const clientTable = pgTable("client", {
     .notNull(),
 });
 
-export const clientRelations = relations(clientTable, ({ one }) => ({
+export const clientRelations = relations(clientTable, ({ one, many }) => ({
   user: one(userTable, {
     fields: [clientTable.userId],
     references: [userTable.id],
   }),
+  bots: many(botTable),
 }));
 
 export type Client = typeof clientTable.$inferSelect;
