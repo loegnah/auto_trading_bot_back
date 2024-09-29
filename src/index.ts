@@ -4,12 +4,18 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { Elysia } from "elysia";
+import { env } from "./common/env";
+import { dev } from "./dev";
 import { discordPlugin } from "./discord/discord.plugin";
 import { tradePlugin } from "./trade/trade.plugin";
 import { userPlugin } from "./user/user.plugin";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+if (env.IS_DEV) {
+  dev();
+}
 
 new Elysia()
   .use(logger())

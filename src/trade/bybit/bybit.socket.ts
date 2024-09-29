@@ -1,12 +1,16 @@
 import { WebsocketClient } from "bybit-api";
-import { topicChannel } from "../../channel/topic.channel";
-import { Candle, CandleRaw, printCandleData } from "../lib/candle";
+import { candleChannel } from "../../channel/channel";
+import {
+  Candle,
+  CandleRaw,
+  convertCandleRawToCandle,
+  printCandleData,
+} from "../lib/candle";
 import { Topic } from "../lib/topic";
 import { TradeSocket } from "../model/socket.model";
 
 export class BybitSocket extends TradeSocket {
   private wsClient: WebsocketClient;
-
   private latestCandleRaw: { [K in Topic]?: CandleRaw } = {};
 
   constructor() {
@@ -31,12 +35,15 @@ export class BybitSocket extends TradeSocket {
       const newCandleRaw = res.data[0];
 
       if (preCandleRaw && preCandleRaw.start !== newCandleRaw.start) {
-        topicChannel.emit("bybit", res.topic, { topic, preCandleRaw });
+        candleChannel.emit(
+          "bybit",
+          res.topic,
+          convertCandleRawToCandle(newCandleRaw),
+        );
       }
       this.latestCandleRaw[topic] = newCandleRaw;
     });
   }
-
 
   subscribeTopics(topics: string[]) {
     this.wsClient.subscribeV5(topics, "linear");

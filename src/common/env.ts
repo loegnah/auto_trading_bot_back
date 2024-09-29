@@ -1,8 +1,14 @@
 import { z } from "zod";
 import { zBoolean } from "./validate";
 
+const booleanParser = z.coerce
+  .string()
+  .transform((val) => val === "true" || val === "True" || val === "TRUE");
+
 export const env = z
   .object({
+    IS_DEV: booleanParser,
+
     DB_MIGRATION_DIR: z.string(),
     DB_URL: z.string(),
 
