@@ -8,6 +8,7 @@
     "db:gen": "drizzle-kit generate",
     "db:mig": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "db:reset": "supabase db rest",
     "format": "prettier --write \"{src,test}/**/*.{js,jsx,ts,tsx,md,json,css,html}\""
   },
   "dependencies": {
