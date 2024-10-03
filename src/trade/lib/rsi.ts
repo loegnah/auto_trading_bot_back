@@ -1,4 +1,4 @@
-import { sum } from "lodash-es";
+import { sum } from "es-toolkit";
 
 function rsi(avgGain: number, avgLoss: number) {
   return 100 - 100 / (1 + avgGain / avgLoss);

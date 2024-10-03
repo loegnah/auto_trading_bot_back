@@ -3,6 +3,7 @@ import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
 } from "discord.js";
+import { delay } from "es-toolkit";
 
 export class DiscordCommand {
   constructor(
@@ -22,11 +23,13 @@ export const discordCommands: {
     new SlashCommandBuilder()
       .setName("command-1")
       .setDescription("Provides information about the server."),
-    async (intAct) => {
-      intAct.reply({
-        content: `${intAct.commandName}-reply`,
+    async (interaction) => {
+      await interaction.reply({
+        content: "Pong",
         ephemeral: true,
       });
+      await delay(4000);
+      await interaction.deleteReply();
     },
   ),
   "command-2": new DiscordCommand(
@@ -37,9 +40,9 @@ export const discordCommands: {
       .addStringOption((option) =>
         option.setName("input").setDescription("The input to echo back"),
       ),
-    async (intAct) => {
-      intAct.reply({
-        content: `${intAct.commandName}-reply`,
+    async (interaction) => {
+      interaction.reply({
+        content: `${interaction.commandName}-reply`,
         ephemeral: true,
       });
     },
