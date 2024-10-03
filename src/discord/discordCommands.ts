@@ -29,7 +29,11 @@ export const discordCommands: {
         ephemeral: true,
       });
       await delay(4000);
-      await interaction.deleteReply();
+      await interaction.followUp({
+        content: "Pong 2",
+        ephemeral: true,
+      });
+      // await interaction.deleteReply();
     },
   ),
   "command-2": new DiscordCommand(

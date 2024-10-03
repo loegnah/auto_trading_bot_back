@@ -12,7 +12,9 @@ import {
   REST,
   RESTPutAPIApplicationCommandsResult,
   Routes,
+  TextChannel,
 } from "discord.js";
+import { delay } from "es-toolkit";
 import { env } from "../common/env";
 import { discordCommands } from "./discordCommands";
 
@@ -31,6 +33,16 @@ export class DiscordService {
     await this.client.login(env.DISCORD_TOKEN);
     if (env.DISCORD_RESET_COMMANDS) {
       await this.registerCommands();
+    }
+  }
+
+  async sendMsgToChannel(channelId: string, msg: string) {
+    const channel = await this.client.channels.fetch(channelId);
+    console.log(chalk.yellow("[discord] Try to send message to channel"));
+    if (channel instanceof TextChannel) {
+      await channel.send(msg);
+    } else {
+      console.error("The provided channel is not a text channel");
     }
   }
 
