@@ -1,21 +1,27 @@
+import { z } from "zod";
+
 export const CANDLE_FIELDS = ["start", "open", "high", "low", "close"] as const;
 export type CandleFields = (typeof CANDLE_FIELDS)[number];
 
-export type Candle = {
-  start: number;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-};
+export const candleSchema = z.object({
+  start: z.number(),
+  open: z.number(),
+  high: z.number(),
+  low: z.number(),
+  close: z.number(),
+});
 
-export type CandleRaw = {
-  start: string;
-  open: string;
-  high: string;
-  low: string;
-  close: string;
-};
+export type Candle = z.infer<typeof candleSchema>;
+
+export const candleRawSchema = z.object({
+  start: z.string(),
+  open: z.string(),
+  high: z.string(),
+  low: z.string(),
+  close: z.string(),
+});
+
+export type CandleRaw = z.infer<typeof candleRawSchema>;
 
 export const SOURCE_TYPE = ["close", "ohlc"] as const;
 export type SourceType = (typeof SOURCE_TYPE)[number];

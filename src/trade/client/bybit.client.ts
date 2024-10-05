@@ -10,12 +10,12 @@ export class BybitClient extends TradeClient {
     name,
     apiKey: key,
     apiSecret: secret,
-    testnet,
+    testnet = false,
   }: {
     name: string;
     apiKey: string;
     apiSecret: string;
-    testnet: boolean;
+    testnet?: boolean;
   }) {
     super({ name });
     this.client = new RestClientV5({ key, secret, testnet });

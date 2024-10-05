@@ -4,20 +4,17 @@ import { TradeStrategy } from "./strategy.model";
 export abstract class TradeBot {
   protected name: string;
   protected active: boolean;
-  protected client: TradeClient;
-  protected strategy: TradeStrategy;
+  protected abstract client: TradeClient;
+  protected abstract strategy: TradeStrategy;
 
-  constructor(params: {
-    name: string;
-    active: boolean;
-    client: TradeClient;
-    strategy: TradeStrategy;
-  }) {
+  constructor(params: { name: string; active: boolean }) {
     this.name = params.name;
     this.active = params.active;
-    this.client = params.client;
-    this.strategy = params.strategy;
   }
+
+  abstract subscribeChannel(): void;
+
+  abstract inputDataToStrategy(data: any): void;
 
   abstract run(): Promise<void>;
 }
