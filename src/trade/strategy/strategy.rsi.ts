@@ -1,4 +1,4 @@
-import { BybitClient } from "../bybit/bybit.client";
+import { BybitClient } from "../client/bybit.client";
 import { Interval, SourceType } from "../lib/candle";
 import { calcRsiHistory } from "../lib/rsi";
 import { Topic } from "../lib/topic";

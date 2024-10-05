@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, serial, text } from "drizzle-orm/pg-core";
-import { clientTable } from "./client.schema";
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
+import { clientTable } from "./client.schema";
 
 export const userTable = pgTable("user", {
   id: serial("id").primaryKey(),
