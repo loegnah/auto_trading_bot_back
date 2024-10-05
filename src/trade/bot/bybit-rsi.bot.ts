@@ -30,6 +30,17 @@ export class BybitRsiBot extends TradeBot {
   async init() {
     // TODO: DB에서 active 여부 조회 후 적용
     this.active = true;
+    await this.initClient();
+    await this.initStrategy();
+  }
+
+  async initClient() {
+    // TODO: 초기화 로직 추가
+  }
+
+  async initStrategy() {
+    // TODO: 초기화 로직 추가, candle 추가
+    await this.strategy.init({ candles: [] });
   }
 
   async subscribeChannel() {

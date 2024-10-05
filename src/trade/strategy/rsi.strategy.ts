@@ -1,12 +1,14 @@
-import { Candle, candleSchema, Interval, SourceType } from "../lib/candle";
-import { calcRsiHistory } from "../lib/rsi";
+import { Candle, CandleTool, SourceType } from "../lib/candle";
+import { calcRsi, calcRsiHistory } from "../lib/rsi";
 import { Topic } from "../lib/topic";
 import { TradeStrategy } from "../model/strategy.model";
 
 export class RsiStrategy extends TradeStrategy {
-  private lastRsi: number | null = null;
   private rsiPeriod: number;
   private sourceType: SourceType;
+  private lastRsi?: number;
+  private lastAvgGain?: number;
+  private lastAvgLoss?: number;
 
   constructor(params: {
     name: string;
@@ -19,19 +21,37 @@ export class RsiStrategy extends TradeStrategy {
     this.rsiPeriod = params.period;
   }
 
-  async calcInitialRsi(candles: Candle[]) {
-    const prices = candles
-      .map((candle) =>
-        this.sourceType === "close"
-          ? candle.close
-          : (candle.open + candle.high + candle.low + candle.close) / 4,
-      )
-      .reverse();
-    const rsiHistory = calcRsiHistory({ prices, period: this.rsiPeriod });
-    this.lastRsi = rsiHistory[rsiHistory.length - 1];
+  async init({ candles }: { candles: Candle[] }) {
+    await this.calcInitialRsi(candles);
+  }
+
+  private async calcInitialRsi(candles: Candle[]) {
+    const prices = candles.map(this.convertCandle).reverse();
+    const { rsiList, avgGain, avgLoss } = calcRsiHistory({
+      prices,
+      period: this.rsiPeriod,
+    });
+    this.lastRsi = rsiList[rsiList.length - 1];
+    this.lastAvgGain = avgGain;
+    this.lastAvgLoss = avgLoss;
+  }
+
+  private convertCandle(candle: Candle): number {
+    return this.sourceType === "close"
+      ? candle.close
+      : CandleTool.calcOhlc(candle);
   }
 
   async inputData(candle: Candle) {
-    // pass
+    const { rsi, avgGain, avgLoss } = calcRsi({
+      prePrice: candle.close,
+      price: candle.close,
+      period: this.rsiPeriod,
+      preAvgGain: this.lastAvgGain ?? 0,
+      preAvgLoss: this.lastAvgLoss ?? 0,
+    });
+    this.lastRsi = rsi;
+    this.lastAvgGain = avgGain;
+    this.lastAvgLoss = avgLoss;
   }
 }

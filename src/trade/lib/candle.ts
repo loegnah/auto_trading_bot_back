@@ -43,21 +43,27 @@ export const INTERVAL = [
 ] as const;
 export type Interval = (typeof INTERVAL)[number];
 
-export function printCandleData(candle: CandleRaw | Candle) {
-  const printList: string[] = CANDLE_FIELDS.map(
-    (field) => `${field}: ${candle[field]}`,
-  );
-  console.log("----------------------------------------");
-  console.log(printList.join("\n"));
-  console.log("----------------------------------------");
-}
+export class CandleTool {
+  static print(candle: CandleRaw | Candle) {
+    const printList: string[] = CANDLE_FIELDS.map(
+      (field) => `${field}: ${candle[field]}`,
+    );
+    console.log("----------------------------------------");
+    console.log(printList.join("\n"));
+    console.log("----------------------------------------");
+  }
 
-export function convertCandleRawToCandle(candleRaw: CandleRaw): Candle {
-  return {
-    start: Number(candleRaw.start),
-    open: Number(candleRaw.open),
-    high: Number(candleRaw.high),
-    low: Number(candleRaw.low),
-    close: Number(candleRaw.close),
-  };
+  static convertRaw(candleRaw: CandleRaw): Candle {
+    return {
+      start: Number(candleRaw.start),
+      open: Number(candleRaw.open),
+      high: Number(candleRaw.high),
+      low: Number(candleRaw.low),
+      close: Number(candleRaw.close),
+    };
+  }
+
+  static calcOhlc(candle: Candle) {
+    return (candle.open + candle.high + candle.low + candle.close) / 4;
+  }
 }

@@ -1,11 +1,6 @@
 import { WebsocketClient } from "bybit-api";
 import { candleChannel } from "../../channel/channel";
-import {
-  Candle,
-  CandleRaw,
-  convertCandleRawToCandle,
-  printCandleData,
-} from "../lib/candle";
+import { CandleRaw, CandleTool } from "../lib/candle";
 import { Topic } from "../lib/topic";
 import { TradeSocket } from "../model/socket.model";
 
@@ -38,7 +33,7 @@ export class BybitSocket extends TradeSocket {
         candleChannel.emit(
           "bybit",
           res.topic,
-          convertCandleRawToCandle(newCandleRaw),
+          CandleTool.convertRaw(newCandleRaw),
         );
       }
       this.latestCandleRaw[topic] = newCandleRaw;

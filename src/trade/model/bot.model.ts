@@ -12,6 +12,10 @@ export abstract class TradeBot {
     this.active = params.active;
   }
 
+  abstract initClient(): void;
+
+  abstract initStrategy(): void;
+
   abstract subscribeChannel(): void;
 
   abstract inputDataToStrategy(data: any): void;

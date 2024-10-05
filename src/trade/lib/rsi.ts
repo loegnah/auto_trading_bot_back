@@ -10,7 +10,7 @@ export function calcRsiHistory({
 }: {
   prices: number[];
   period: number;
-}): number[] {
+}): { rsiList: number[]; avgGain: number; avgLoss: number } {
   const changes = prices.slice(1).map((price, index) => price - prices[index]);
   const gains = changes.map((change) => Math.max(change, 0));
   const losses = changes.map((change) => Math.abs(Math.min(change, 0)));
@@ -24,7 +24,7 @@ export function calcRsiHistory({
     avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
     rsiList.push(rsi(avgGain, avgLoss));
   }
-  return rsiList;
+  return { rsiList, avgGain, avgLoss };
 }
 
 export function calcRsi({
@@ -39,11 +39,11 @@ export function calcRsi({
   period: number;
   preAvgGain: number;
   preAvgLoss: number;
-}): number {
+}): { rsi: number; avgGain: number; avgLoss: number } {
   const change = price - prePrice;
   const gain = Math.max(change, 0);
   const loss = Math.abs(Math.min(change, 0));
   const avgGain = (preAvgGain * (period - 1) + gain) / period;
   const avgLoss = (preAvgLoss * (period - 1) + loss) / period;
-  return rsi(avgGain, avgLoss);
+  return { rsi: rsi(avgGain, avgLoss), avgGain, avgLoss };
 }
